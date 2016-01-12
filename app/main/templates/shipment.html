@@ -29,6 +29,9 @@
     </div>
     <div>Samples related to experiment: {{dewar['epn']}}</div>
     <div>The Dewar ID is: {{dewar['name']}}</div>
+    <div>
+      <img src="{{ qrcode(dewar['qrcode_data'], box_size=6) }}">
+    </div>
   </div>
   {% endfor %}
 {% endblock %}
