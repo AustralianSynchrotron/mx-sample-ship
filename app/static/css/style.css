@@ -1,0 +1,9 @@
+.shipment {
+  width: 100%;
+}
+
+.shipment div {
+  padding: 5px;
+  border: 1px solid black;
+  margin-bottom: -1px;
+}

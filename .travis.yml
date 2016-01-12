@@ -3,6 +3,8 @@ python:
   - 2.7
   - 3.5
 sudo: false
+services:
+  - mongodb
 env:
   - SECRET_KEY=secret
 install:

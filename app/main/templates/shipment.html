@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block page_content %}
+  {% for dewar in dewars %}
+  <div class="page-header">
+    <h1>MX Sample Shipment</h1>
+  </div>
+  <div class="shipment">
+    <div>
+      <h2>TO:</h2>
+      <p>
+        MX Beamlines<br/>
+        Australian Synchrotron<br/>
+        800 Blackburn Rd.<br/>
+        Clayton<br/>
+        VIC 3168
+      </p>
+      <p>
+        Contact Phone: +61 3 8540 4100<br/>
+        Contact Phone: mx@synchrotron.org.au
+      </p>
+    </div>
+    <div>
+      <h2>FROM:</h2>
+      <p>
+        {{dewar['owner']}}<br/>
+      </p>
+    </div>
+    <div>Samples related to experiment: {{dewar['epn']}}</div>
+    <div>The Dewar ID is: {{dewar['name']}}</div>
+  </div>
+  {% endfor %}
+{% endblock %}
