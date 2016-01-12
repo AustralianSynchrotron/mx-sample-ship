@@ -1,6 +1,10 @@
-from app import create_app
+from app import create_app, mongo
 from flask import url_for
 import pytest
+
+def empty_collections(mongo):
+    for name in ['adaptors', 'dewars', 'ports', 'pucks']:
+        mongo.db[name].remove()
 
 
 @pytest.fixture()
@@ -8,6 +12,7 @@ def app(request):
     app = create_app('testing')
     context = app.app_context()
     context.push()
+    empty_collections(mongo)
     def teardown():
         context.pop()
     request.addfinalizer(teardown)
@@ -30,3 +35,7 @@ def test_form_submits(app):
     }
     response = client.post(url_for('main.index'), data=data)
     assert response.status_code == 302
+    dewars = list(mongo.db.dewars.find())
+    assert len(dewars) == 1
+    dewar = dewars[0]
+    assert dewar['owner'] == 'Jane'

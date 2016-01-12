@@ -3,6 +3,8 @@ python:
   - 2.7
   - 3.5
 sudo: false
+env:
+  - SECRET_KEY=secret
 install:
   - pip install -r requirements.txt
 script:
