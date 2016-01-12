@@ -1,9 +1,13 @@
+import os
+
+
 class Config(object):
-    pass
+    SECRET_KEY = os.environ['SECRET_KEY']
 
 
 class TestingConfig(Config):
     TESTING = True
+    WTF_CSRF_ENABLED = False
 
 
 class DevelopmentConfig(Config):
