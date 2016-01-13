@@ -1,6 +1,16 @@
 from app import create_app, mongo
+from app.models import User
 from flask import url_for
+from flask.ext.login import login_user
 import pytest
+from datetime import datetime
+from pytz import UTC
+from portalapi.models.scientist import Scientist
+from six import string_types
+
+
+LOGIN_DATA = {'username': 'jane', 'password': 'secret'}
+
 
 def empty_collections(mongo):
     for name in ['adaptors', 'dewars', 'ports', 'pucks']:
@@ -19,8 +29,32 @@ def app(request):
     return app
 
 
-def test_index_renders(app):
+def login_patch(auth, username=None, password=None):
+    auth._token = '1a2b3c'
+    auth._lifespan = 3600
+    auth._expires = UTC.localize(datetime.now())
+    return True
+
+
+def get_scientist_patch(api):
+    return Scientist({
+        'first_names': 'Jane',
+        'last_name': 'Doe',
+    })
+
+
+def test_index_redirects_to_login(app):
     client = app.test_client()
+    response = client.get(url_for('main.index'))
+    assert response.status_code == 302
+
+
+def test_index_renders_after_login(app, monkeypatch):
+    monkeypatch.setattr('portalapi.Authentication.login', login_patch)
+    monkeypatch.setattr('portalapi.PortalAPI.get_scientist', get_scientist_patch)
+    client = app.test_client()
+    response = client.post(url_for('auth.login'), data=LOGIN_DATA)
+    assert response.status_code == 302
     response = client.get(url_for('main.index'))
     assert response.status_code == 200
     html = response.data.decode('utf-8')
@@ -28,8 +62,10 @@ def test_index_renders(app):
     assert 'Full Name' in html
 
 
-def test_form_submits(app):
+def test_form_submits(app, monkeypatch):
+    monkeypatch.setattr('portalapi.Authentication.login', login_patch)
     client = app.test_client()
+    client.post(url_for('auth.login'), data=LOGIN_DATA)
     data = {
         'owner': 'Jane',
         'department': 'Chemistry',
@@ -54,7 +90,7 @@ def test_form_submits(app):
     dewars = list(mongo.db.dewars.find())
     assert len(dewars) == 1
     dewar = dewars[0]
-    assert isinstance(dewar['shipment_id'], str)
+    assert isinstance(dewar['shipment_id'], string_types)
     assert dewar['name'] == 'd-123-1'
     assert dewar['epn'] == '123'
     assert dewar['owner'] == 'Jane'
@@ -74,8 +110,10 @@ def test_form_submits(app):
     assert dewar['expectedContainers'] == 'ASP001,ASP002 | ASP003'
 
 
-def test_shipment_view(app):
+def test_shipment_view(app, monkeypatch):
+    monkeypatch.setattr('portalapi.Authentication.login', login_patch)
     client = app.test_client()
+    client.post(url_for('auth.login'), data=LOGIN_DATA)
     dewar = {
         'shipment_id': '1a',
         'name': 'd-123-1',

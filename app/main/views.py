@@ -2,8 +2,10 @@ from . import main
 from .. import mongo
 from ..utils import arrival_url
 from flask import render_template, url_for, redirect, abort
+from flask.ext.login import login_required, current_user
 from flask_wtf import Form
-from wtforms import StringField, SubmitField, BooleanField, SelectField
+from wtforms import (StringField, PasswordField, SubmitField, BooleanField,
+                     SelectField)
 from wtforms.validators import DataRequired
 import uuid
 
@@ -34,6 +36,7 @@ class ShipmentForm(Form):
 
 
 @main.route('/', methods=['GET', 'POST'])
+@login_required
 def index():
     form = ShipmentForm()
     if form.validate_on_submit():
@@ -64,14 +67,19 @@ def index():
         }
         mongo.db.dewars.insert(dewar)
         return redirect(url_for('.shipment', shipment_id=shipment_id))
-    return render_template('index.html', form=form)
+    scientist = current_user.api.get_scientist()
+    full_name = '{user.first_names} {user.last_name}'.format(user=scientist)
+    form.owner.data = full_name
+    form.email.data = scientist.email
+    return render_template('main/index.html', form=form)
 
 
 @main.route('/shipment/<shipment_id>')
+@login_required
 def shipment(shipment_id):
     dewars = list(mongo.db.dewars.find({'shipment_id': shipment_id}))
     for dewar in dewars:
         dewar['qrcode_data'] = arrival_url(dewar)
     if not dewars:
         abort(404)
-    return render_template('shipment.html', dewars=dewars)
+    return render_template('main/shipment.html', dewars=dewars)
