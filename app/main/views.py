@@ -35,9 +35,21 @@ class ShipmentForm(Form):
     submit = SubmitField()
 
 
-@main.route('/', methods=['GET', 'POST'])
-@login_required
+@main.route('/')
 def index():
+    return redirect(url_for('.shipment_form'))
+
+
+@main.route('/experiments')
+@login_required
+def experiments():
+    experiments = current_user.api.get_scientist_visits()
+    return render_template('main/experiments.html', experiments=experiments)
+
+
+@main.route('/shipment-form', methods=['GET', 'POST'])
+@login_required
+def shipment_form():
     form = ShipmentForm()
     if form.validate_on_submit():
         epn = form.data['epn']
@@ -70,8 +82,10 @@ def index():
     scientist = current_user.api.get_scientist()
     full_name = '{user.first_names} {user.last_name}'.format(user=scientist)
     form.owner.data = full_name
+    form.institute.data = scientist.organisation.name_long
     form.email.data = scientist.email
-    return render_template('main/index.html', form=form)
+    form.phone.data = scientist.telephone_number_1
+    return render_template('main/shipment-form.html', form=form)
 
 
 @main.route('/shipment/<shipment_id>')
@@ -82,4 +96,4 @@ def shipment(shipment_id):
         dewar['qrcode_data'] = arrival_url(dewar)
     if not dewars:
         abort(404)
-    return render_template('main/shipment.html', dewars=dewars)
+    return render_template('main/shipment-slip.html', dewars=dewars)

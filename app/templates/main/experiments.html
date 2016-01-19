@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block page_content %}
+  <h2>Select an experiment</h2>
+  <ul>
+    {% for experiment in experiments %}
+      <li>{{ experiment.epn }}</li>
+    {% endfor %}
+  </ul>
+{% endblock %}
