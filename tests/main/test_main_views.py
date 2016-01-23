@@ -60,6 +60,8 @@ def test_shipment_form_redirects_to_login(app):
 def test_shipment_form_renders_after_login(app, monkeypatch):
     monkeypatch.setattr('portalapi.Authentication.login', login_patch)
     monkeypatch.setattr('portalapi.PortalAPI.get_scientist', get_scientist_patch)
+    monkeypatch.setattr('portalapi.PortalAPI.get_scientist_visits',
+                        get_scientist_visits_patch)
     client = app.test_client()
     response = client.post(url_for('auth.login'), data=LOGIN_DATA)
     assert response.status_code == 302
@@ -68,10 +70,13 @@ def test_shipment_form_renders_after_login(app, monkeypatch):
     html = response.data.decode('utf-8')
     assert '<title>MX Sample Shipment</title>' in html
     assert 'Full Name' in html
+    assert '123a' in html
 
 
 def test_form_submits(app, monkeypatch):
     monkeypatch.setattr('portalapi.Authentication.login', login_patch)
+    monkeypatch.setattr('portalapi.PortalAPI.get_scientist_visits',
+                        get_scientist_visits_patch)
     client = app.test_client()
     client.post(url_for('auth.login'), data=LOGIN_DATA)
     data = {
@@ -85,7 +90,7 @@ def test_form_submits(app, monkeypatch):
         'country': 'Australia',
         'phone': '111-222-333',
         'email': 'jane@example.com',
-        'epn': '123',
+        'epn': '123a',
         'return_dewar': 'y',
         'courier': 'Fast Deliveries',
         'courier_account': '999',
@@ -99,8 +104,8 @@ def test_form_submits(app, monkeypatch):
     assert len(dewars) == 1
     dewar = dewars[0]
     assert isinstance(dewar['shipment_id'], string_types)
-    assert dewar['name'] == 'd-123-1'
-    assert dewar['epn'] == '123'
+    assert dewar['name'] == 'd-123a-1'
+    assert dewar['epn'] == '123a'
     assert dewar['owner'] == 'Jane'
     assert dewar['department'] == 'Chemistry'
     assert dewar['institute'] == 'Some University'
@@ -124,8 +129,8 @@ def test_shipment_view(app, monkeypatch):
     client.post(url_for('auth.login'), data=LOGIN_DATA)
     dewar = {
         'shipment_id': '1a',
-        'name': 'd-123-1',
-        'epn': '123',
+        'name': 'd-123a-1',
+        'epn': '123a',
         'owner': 'Jane',
         'department': 'Chemistry',
         'institute': 'Some University',
@@ -145,17 +150,5 @@ def test_shipment_view(app, monkeypatch):
     mongo.db.dewars.insert(dewar)
     response = client.get(url_for('main.shipment', shipment_id='1a'))
     html = response.data.decode('utf-8')
-    assert 'The Dewar ID is: d-123-1' in html
+    assert 'The Dewar ID is: d-123a-1' in html
     assert '123 Main Road' in html
-
-
-def test_experiments_view(app, monkeypatch):
-    monkeypatch.setattr('portalapi.Authentication.login', login_patch)
-    monkeypatch.setattr('portalapi.PortalAPI.get_scientist_visits',
-                        get_scientist_visits_patch)
-    client = app.test_client()
-    client.post(url_for('auth.login'), data=LOGIN_DATA)
-    response = client.get(url_for('main.experiments'))
-    assert response.status_code == 200
-    html = response.data.decode('utf-8')
-    assert '123a' in html

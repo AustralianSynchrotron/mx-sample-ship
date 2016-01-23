@@ -21,15 +21,15 @@ class ShipmentForm(Form):
     country = StringField('Country')
     phone = StringField('Contact Phone Number')
     email = StringField('Contact Email')
-    epn = StringField('EPN', validators=[DataRequired()])
+    # epn field must be generated when subclassing the ShipmentForm
     return_dewar = BooleanField('Return dewar?')
     courier = StringField('Courier')
     courier_account = StringField('Courier Account Number')
     container_type = SelectField('Sample Type',
-                              choices=[('cassette', 'cassette'),
-                                       ('pucks', 'pucks'),
-                                       ('canes', 'canes'),
-                                      ])
+                                 choices=[('cassette', 'cassette'),
+                                          ('pucks', 'pucks'),
+                                          ('canes', 'canes'),
+                                         ])
     container_ids_1 = StringField('ID(s) for adaptor/cassette 1')
     container_ids_2 = StringField('ID(s) for adaptor/cassette 2')
     submit = SubmitField()
@@ -40,17 +40,16 @@ def index():
     return redirect(url_for('.shipment_form'))
 
 
-@main.route('/experiments')
-@login_required
-def experiments():
-    experiments = current_user.api.get_scientist_visits()
-    return render_template('main/experiments.html', experiments=experiments)
-
-
 @main.route('/shipment-form', methods=['GET', 'POST'])
 @login_required
 def shipment_form():
-    form = ShipmentForm()
+
+    visits = current_user.api.get_scientist_visits()
+    epn_choices = [(visit.epn, visit.epn) for visit in visits]
+    class UserShipmentForm(ShipmentForm):
+        epn = SelectField('EPN', choices=epn_choices)
+
+    form = UserShipmentForm()
     if form.validate_on_submit():
         epn = form.data['epn']
         shipment_id = str(uuid.uuid4())
