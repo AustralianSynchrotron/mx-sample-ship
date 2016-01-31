@@ -1,4 +1,4 @@
-from app import create_app, mongo
+from mxsampleship import create_app, mongo
 from flask import url_for
 import pytest
 

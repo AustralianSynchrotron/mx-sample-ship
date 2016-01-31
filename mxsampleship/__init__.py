@@ -6,6 +6,9 @@ from flask.ext.bootstrap import Bootstrap
 from config import config
 
 
+__version__ = '0.1.0'
+
+
 login_manager = LoginManager()
 login_manager.login_view = 'auth.login'
 mongo = PyMongo()

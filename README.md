@@ -1,8 +1,5 @@
 Website for submitting MX sample shipping information.
 
-[![Build Status](https://travis-ci.org/AustralianSynchrotron/mx-sample-ship.svg)](https://travis-ci.org/AustralianSynchrotron/mx-sample-ship)
-
-
 ## Running
 
 ```bash
@@ -14,5 +11,6 @@ export SAMPLE_SHIP_CONFIG='development' # or 'production'
 ## Testing
 
 ```bash
-./manage.py test
+pip install -e .
+py.test
 ```

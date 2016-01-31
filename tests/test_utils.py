@@ -1,4 +1,4 @@
-from app.utils import arrival_url
+from mxsampleship.utils import arrival_url
 
 
 def test_arrival_url():

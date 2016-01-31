@@ -1,5 +1,5 @@
-from app import create_app, mongo
-from app.models import User
+from mxsampleship import create_app, mongo
+from mxsampleship.models import User
 from flask import url_for
 from flask.ext.login import login_user
 import pytest
