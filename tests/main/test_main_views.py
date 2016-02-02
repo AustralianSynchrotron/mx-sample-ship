@@ -3,6 +3,7 @@ from mxsampleship.models import User
 from flask import url_for
 from flask.ext.login import login_user
 import pytest
+from bs4 import BeautifulSoup
 from datetime import datetime
 from pytz import UTC
 from portalapi.models import Scientist, Visit
@@ -18,13 +19,20 @@ def empty_collections(mongo):
 
 
 @pytest.yield_fixture
-def app():
+def client():
     app = create_app('testing')
     context = app.app_context()
     context.push()
     empty_collections(mongo)
-    yield app
+    yield app.test_client()
     context.pop()
+
+
+@pytest.yield_fixture
+def logged_in_client(client, monkeypatch):
+    monkeypatch.setattr('portalapi.Authentication.login', login_patch)
+    client.post(url_for('auth.login'), data=LOGIN_DATA)
+    yield client
 
 
 def login_patch(auth, username=None, password=None):
@@ -45,38 +53,36 @@ def get_scientist_patch(api):
 
 
 def get_scientist_visits_patch(api):
-    epns = ['123a', '456b']
-    return [Visit({'epn': epn}) for epn in epns]
+    visits = [
+        Visit({'epn': '123a', 'start_time': '2016-04-29T08:00:00+10:00'}),
+        Visit({'epn': '456b', 'start_time': '2016-05-01T08:00:00+10:00'}),
+    ]
+    return visits
 
 
-def test_shipment_form_redirects_to_login(app):
-    client = app.test_client()
+def test_shipment_form_redirects_to_login(client):
     response = client.get(url_for('main.shipment_form'))
     assert response.status_code == 302
 
 
-def test_shipment_form_renders_after_login(app, monkeypatch):
-    monkeypatch.setattr('portalapi.Authentication.login', login_patch)
+def test_shipment_form_renders_after_login(logged_in_client, monkeypatch):
     monkeypatch.setattr('portalapi.PortalAPI.get_scientist', get_scientist_patch)
     monkeypatch.setattr('portalapi.PortalAPI.get_scientist_visits',
                         get_scientist_visits_patch)
-    client = app.test_client()
-    response = client.post(url_for('auth.login'), data=LOGIN_DATA)
-    assert response.status_code == 302
-    response = client.get(url_for('main.shipment_form'))
+    response = logged_in_client.get(url_for('main.shipment_form'))
     assert response.status_code == 200
     html = response.data.decode('utf-8')
-    assert '<title>MX Sample Shipment</title>' in html
+    page = BeautifulSoup(response.data, 'html.parser')
+    assert 'MX Sample Shipment' in page.title
     assert 'Full Name' in html
-    assert '123a' in html
+    epn_option = page.find(id='epn').option
+    assert epn_option.text == '123a @ 2016-04-29 08:00'
+    assert epn_option['value'] == '123a'
 
 
-def test_form_submits(app, monkeypatch):
-    monkeypatch.setattr('portalapi.Authentication.login', login_patch)
+def test_form_submits(logged_in_client, monkeypatch):
     monkeypatch.setattr('portalapi.PortalAPI.get_scientist_visits',
                         get_scientist_visits_patch)
-    client = app.test_client()
-    client.post(url_for('auth.login'), data=LOGIN_DATA)
     data = {
         'owner': 'Jane',
         'department': 'Chemistry',
@@ -96,7 +102,7 @@ def test_form_submits(app, monkeypatch):
         'container_ids_1': 'ASP001,ASP002',
         'container_ids_2': 'ASP003',
     }
-    response = client.post(url_for('main.shipment_form'), data=data)
+    response = logged_in_client.post(url_for('main.shipment_form'), data=data)
     assert response.status_code == 302
     dewars = list(mongo.db.dewars.find())
     assert len(dewars) == 1
@@ -114,17 +120,14 @@ def test_form_submits(app, monkeypatch):
     assert dewar['country'] == 'Australia'
     assert dewar['phone'] == '111-222-333'
     assert dewar['email'] == 'jane@example.com'
-    assert dewar['returnDewar'] == True
+    assert dewar['returnDewar'] is True
     assert dewar['courier'] == 'Fast Deliveries'
     assert dewar['courierAccount'] == '999'
     assert dewar['containerType'] == 'pucks'
     assert dewar['expectedContainers'] == 'ASP001,ASP002 | ASP003'
 
 
-def test_shipment_view(app, monkeypatch):
-    monkeypatch.setattr('portalapi.Authentication.login', login_patch)
-    client = app.test_client()
-    client.post(url_for('auth.login'), data=LOGIN_DATA)
+def test_shipment_view(logged_in_client, monkeypatch):
     dewar = {
         'shipment_id': '1a',
         'name': 'd-123a-1',
@@ -146,7 +149,7 @@ def test_shipment_view(app, monkeypatch):
         'expectedContainers': 'ASP001,ASP002 | ASP003',
     }
     mongo.db.dewars.insert(dewar)
-    response = client.get(url_for('main.shipment', shipment_id='1a'))
+    response = logged_in_client.get(url_for('main.shipment', shipment_id='1a'))
     html = response.data.decode('utf-8')
     assert 'The Dewar ID is: d-123a-1' in html
     assert '123 Main Road' in html

@@ -3,10 +3,10 @@ from flask.ext.login import LoginManager
 from flask.ext.pymongo import PyMongo
 from flask.ext.qrcode import QRcode
 from flask.ext.bootstrap import Bootstrap
-from config import config
+from .config import config
 
 
-__version__ = '0.1.0'
+__version__ = '0.1.1'
 
 
 login_manager = LoginManager()

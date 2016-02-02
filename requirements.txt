@@ -1,3 +1,4 @@
+beautifulsoup4==4.4.1
 colorama==0.3.6
 dominate==2.1.16
 Flask==0.10.1

@@ -24,6 +24,5 @@ class User(UserMixin):
             self.auth.login(username, password)
         self.api = PortalAPI(self.auth)
 
-
     def get_id(self):
         return json.dumps(self.auth.to_token_data())

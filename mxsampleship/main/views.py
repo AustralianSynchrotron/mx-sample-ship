@@ -25,11 +25,10 @@ class ShipmentForm(Form):
     return_dewar = BooleanField('Return dewar?')
     courier = StringField('Courier')
     courier_account = StringField('Courier Account Number')
-    container_type = SelectField('Sample Type',
-                                 choices=[('cassette', 'cassette'),
-                                          ('pucks', 'pucks'),
-                                          ('canes', 'canes'),
-                                         ])
+    container_type = SelectField(
+        'Sample Type',
+        choices=[('pucks', 'pucks'), ('cassette', 'cassette'), ('canes', 'canes')]
+    )
     container_ids_1 = StringField('ID(s) for adaptor/cassette 1')
     container_ids_2 = StringField('ID(s) for adaptor/cassette 2')
     submit = SubmitField()
@@ -45,9 +44,11 @@ def index():
 def shipment_form():
 
     visits = current_user.api.get_scientist_visits()
-    epn_choices = [(visit.epn, visit.epn) for visit in visits]
+    epn_text_fmt = '{0.epn} @ {0.start_time:%Y-%m-%d %H:%M}'
+    epn_choices = [(visit.epn, epn_text_fmt.format(visit)) for visit in visits]
+
     class UserShipmentForm(ShipmentForm):
-        epn = SelectField('EPN', choices=epn_choices)
+        epn = SelectField('Experiment Proposal Number', choices=epn_choices)
 
     form = UserShipmentForm()
     if form.validate_on_submit():
