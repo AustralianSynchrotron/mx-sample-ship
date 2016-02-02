@@ -2,15 +2,13 @@ from mxsampleship import create_app, mongo
 from flask import url_for
 import pytest
 
-@pytest.fixture()
-def app(request):
+@pytest.yield_fixture
+def app():
     app = create_app('testing')
     context = app.app_context()
     context.push()
-    def teardown():
-        context.pop()
-    request.addfinalizer(teardown)
-    return app
+    yield app
+    context.pop()
 
 
 def test_login_renders(app):

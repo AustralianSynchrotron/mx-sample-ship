@@ -17,16 +17,14 @@ def empty_collections(mongo):
         mongo.db[name].remove()
 
 
-@pytest.fixture()
-def app(request):
+@pytest.yield_fixture
+def app():
     app = create_app('testing')
     context = app.app_context()
     context.push()
     empty_collections(mongo)
-    def teardown():
-        context.pop()
-    request.addfinalizer(teardown)
-    return app
+    yield app
+    context.pop()
 
 
 def login_patch(auth, username=None, password=None):
