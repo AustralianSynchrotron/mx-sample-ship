@@ -1,12 +1,7 @@
 from mxsampleship import create_app, mongo
-from mxsampleship.models import User
 from flask import url_for
-from flask.ext.login import login_user
 import pytest
 from bs4 import BeautifulSoup
-from datetime import datetime
-from pytz import UTC
-from portalapi.models import Scientist, Visit
 from six import string_types
 
 
@@ -29,35 +24,9 @@ def client():
 
 
 @pytest.yield_fixture
-def logged_in_client(client, monkeypatch):
-    monkeypatch.setattr('portalapi.Authentication.login', login_patch)
+def logged_in_client(client):
     client.post(url_for('auth.login'), data=LOGIN_DATA)
     yield client
-
-
-def login_patch(auth, username=None, password=None):
-    auth._token = '1a2b3c'
-    auth._lifespan = 3600
-    auth._expires = UTC.localize(datetime.now())
-    return True
-
-
-def get_scientist_patch(api):
-    return Scientist({
-        'first_names': 'Jane',
-        'last_name': 'Doe',
-        'organisation': {'name_long': 'Some University'},
-        'telephone_number_1': '111-222-333',
-        'email': 'jane@example.com',
-    })
-
-
-def get_scientist_visits_patch(api):
-    visits = [
-        Visit({'epn': '123a', 'start_time': '2016-04-29T08:00:00+10:00'}),
-        Visit({'epn': '456b', 'start_time': '2016-05-01T08:00:00+10:00'}),
-    ]
-    return visits
 
 
 def test_shipment_form_redirects_to_login(client):
@@ -65,10 +34,7 @@ def test_shipment_form_redirects_to_login(client):
     assert response.status_code == 302
 
 
-def test_shipment_form_renders_after_login(logged_in_client, monkeypatch):
-    monkeypatch.setattr('portalapi.PortalAPI.get_scientist', get_scientist_patch)
-    monkeypatch.setattr('portalapi.PortalAPI.get_scientist_visits',
-                        get_scientist_visits_patch)
+def test_shipment_form_renders_after_login(logged_in_client):
     response = logged_in_client.get(url_for('main.shipment_form'))
     assert response.status_code == 200
     html = response.data.decode('utf-8')
@@ -80,9 +46,7 @@ def test_shipment_form_renders_after_login(logged_in_client, monkeypatch):
     assert epn_option['value'] == '123a'
 
 
-def test_form_submits(logged_in_client, monkeypatch):
-    monkeypatch.setattr('portalapi.PortalAPI.get_scientist_visits',
-                        get_scientist_visits_patch)
+def test_form_submits(logged_in_client):
     data = {
         'owner': 'Jane',
         'department': 'Chemistry',
@@ -127,7 +91,7 @@ def test_form_submits(logged_in_client, monkeypatch):
     assert dewar['expectedContainers'] == 'ASP001,ASP002 | ASP003'
 
 
-def test_shipment_view(logged_in_client, monkeypatch):
+def test_shipment_view(logged_in_client):
     dewar = {
         'shipment_id': '1a',
         'name': 'd-123a-1',

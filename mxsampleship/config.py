@@ -8,11 +8,15 @@ class Config(object):
 class TestingConfig(Config):
     TESTING = True
     WTF_CSRF_ENABLED = False
-    SERVER_NAME = 'localhost:6000'
+    SERVER_NAME = 'localhost:4999'
     MONGO_URI = 'mongodb://localhost/pucktracker_testing'
     PORTAL_USERNAME = None
     PORTAL_PASSWORD = None
     PORTAL_URL = 'http://mxshiptestingportal/'
+
+
+class FunctionalTestingConfig(TestingConfig):
+    WTF_CSRF_ENABLED = True
 
 
 class DevelopmentConfig(Config):
@@ -32,6 +36,7 @@ class ProductionConfig(Config):
 
 config = {
     'testing': TestingConfig,
+    'functional-testing': FunctionalTestingConfig,
     'development': DevelopmentConfig,
     'production': ProductionConfig,
 }

@@ -19,6 +19,7 @@
     <h1>MX Sample Shipment</h1>
   </div>
   <form class="form form-horizontal" method="post">
+    {{ form.csrf_token }}
     {{ fields([
         'owner', 'department', 'institute', 'street_address', 'city', 'state',
         'postcode', 'country', 'phone', 'email', 'epn',
