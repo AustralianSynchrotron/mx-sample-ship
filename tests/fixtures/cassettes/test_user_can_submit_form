@@ -1,0 +1,57 @@
+interactions:
+- request:
+    body: !!binary |
+      eyJjb250YWluZXJUeXBlIjogInB1Y2tzIiwgImVwbiI6ICIxMjNhIiwgImNvdXJpZXIiOiAiRmFz
+      dCBEZWxpdmVyaWVzIiwgImV4cGVjdGVkQ29udGFpbmVycyI6ICJBU1AwMDAxLEFTUDAwMDIsQVNQ
+      MDAwMyxBU1AwMDA0IHwgQVNQMDAwNixBU1AwMDA3LEFTUDAwMDgsQVNQMDAwOSIsICJyZXR1cm5E
+      ZXdhciI6IHRydWUsICJvd25lciI6ICJKYW5lIERvZSIsICJlbWFpbCI6ICJqYW5lQGV4YW1wbGUu
+      Y29tIiwgInN0YXRlIjogIlZJQyIsICJkZXBhcnRtZW50IjogIkNoZW1pc3RyeSIsICJjb3VyaWVy
+      QWNjb3VudCI6ICIxMjIzMzMiLCAic3RyZWV0QWRkcmVzcyI6ICIxMjMgTWFpbiBSb2FkIiwgImlu
+      c3RpdHV0ZSI6ICJTb21lIFVuaXZlcnNpdHkiLCAicG9zdGNvZGUiOiAiMzAwMCIsICJjb3VudHJ5
+      IjogIkF1c3RyYWxpYSIsICJjaXR5IjogIk1lbGJvdXJuZSIsICJwaG9uZSI6ICIxMjMtNDU2LTc4
+      OSJ9
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      Content-Length: ['459']
+      Content-Type: [application/json]
+      User-Agent: [python-requests/2.9.1]
+    method: POST
+    uri: http://localhost:8002/dewars/new
+  response:
+    body: {string: '{"data":{"__v":0,"containerType":"pucks","epn":"123a","courier":"Fast
+        Deliveries","expectedContainers":"ASP0001,ASP0002,ASP0003,ASP0004 | ASP0006,ASP0007,ASP0008,ASP0009","returnDewar":true,"owner":"Jane
+        Doe","email":"jane@example.com","state":"VIC","department":"Chemistry","courierAccount":"122333","streetAddress":"123
+        Main Road","institute":"Some University","postcode":"3000","country":"Australia","city":"Melbourne","phone":"123-456-789","name":"d-123a-1","_id":"56b1e31bf8c6e39ca2363796"}}'}
+    headers:
+      Connection: [keep-alive]
+      Content-Length: ['496']
+      Content-Type: [application/json; charset=utf-8]
+      Date: ['Wed, 03 Feb 2016 11:23:07 GMT']
+      ETag: [W/"1f0-djk3vYnvkEj+iFrSwOFddQ"]
+      X-Powered-By: [Express]
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.9.1]
+    method: GET
+    uri: http://localhost:8002/dewars/56b1e31bf8c6e39ca2363796
+  response:
+    body: {string: '{"data":{"_id":"56b1e31bf8c6e39ca2363796","containerType":"pucks","epn":"123a","courier":"Fast
+        Deliveries","expectedContainers":"ASP0001,ASP0002,ASP0003,ASP0004 | ASP0006,ASP0007,ASP0008,ASP0009","returnDewar":true,"owner":"Jane
+        Doe","email":"jane@example.com","state":"VIC","department":"Chemistry","courierAccount":"122333","streetAddress":"123
+        Main Road","institute":"Some University","postcode":"3000","country":"Australia","city":"Melbourne","phone":"123-456-789","name":"d-123a-1","__v":0}}'}
+    headers:
+      Connection: [keep-alive]
+      Content-Length: ['496']
+      Content-Type: [application/json; charset=utf-8]
+      Date: ['Wed, 03 Feb 2016 11:23:07 GMT']
+      ETag: [W/"1f0-D6ZYqqKIMcUzvWY/X5zQ8w"]
+      X-Powered-By: [Express]
+    status: {code: 200, message: OK}
+version: 1

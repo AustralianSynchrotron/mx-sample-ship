@@ -25,6 +25,8 @@ responses==0.5.1
 selenium==2.50.1
 six==1.10.0
 splinter==0.7.3
+vcrpy==1.7.4
 visitor==0.1.2
 Werkzeug==0.11.3
+wrapt==1.10.6
 WTForms==2.1

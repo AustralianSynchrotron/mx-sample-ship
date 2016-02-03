@@ -9,7 +9,7 @@ class TestingConfig(Config):
     TESTING = True
     WTF_CSRF_ENABLED = False
     SERVER_NAME = 'localhost:4999'
-    PUCKTRACKER_URL = 'http://pucktracker-test'
+    PUCKTRACKER_URL = 'http://localhost:8002'
     PORTAL_USERNAME = None
     PORTAL_PASSWORD = None
     PORTAL_URL = 'http://mxshiptestingportal/'

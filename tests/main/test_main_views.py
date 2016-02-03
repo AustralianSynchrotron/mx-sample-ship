@@ -57,7 +57,7 @@ def test_shipment_form_renders_when_get_visits_endpoint_is_empty(logged_in_clien
 
 @responses.activate
 def test_form_submits(logged_in_client):
-    responses.add(responses.POST, 'http://pucktracker-test/dewars/new',
+    responses.add(responses.POST, 'http://localhost:8002/dewars/new',
                   json={'error': None, 'data': {'_id': '1a'}})
     data = {
         'owner': 'Jane',
@@ -121,7 +121,7 @@ def test_shipment_view(logged_in_client):
         'containerType': 'pucks',
         'expectedContainers': 'ASP001,ASP002 | ASP003',
     }
-    responses.add(responses.GET, 'http://pucktracker-test/dewars/1a',
+    responses.add(responses.GET, 'http://localhost:8002/dewars/1a',
                   json={'error': None, 'data': dewar})
     response = logged_in_client.get(url_for('main.shipment', shipment_id='1a'))
     html = response.data.decode('utf-8')
