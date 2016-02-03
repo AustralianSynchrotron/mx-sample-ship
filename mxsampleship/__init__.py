@@ -1,17 +1,15 @@
 from flask import Flask
 from flask.ext.login import LoginManager
-from flask.ext.pymongo import PyMongo
 from flask.ext.qrcode import QRcode
 from flask.ext.bootstrap import Bootstrap
 from .config import config
 
 
-__version__ = '0.1.1'
+__version__ = '0.2.0'
 
 
 login_manager = LoginManager()
 login_manager.login_view = 'auth.login'
-mongo = PyMongo()
 bootstrap = Bootstrap()
 qrcode = QRcode()
 
@@ -22,7 +20,6 @@ def create_app(config_name):
     app.config.from_object(config[config_name])
 
     login_manager.init_app(app)
-    mongo.init_app(app)
     qrcode.init_app(app)
     bootstrap.init_app(app)
 

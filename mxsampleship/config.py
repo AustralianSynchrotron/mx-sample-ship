@@ -9,7 +9,7 @@ class TestingConfig(Config):
     TESTING = True
     WTF_CSRF_ENABLED = False
     SERVER_NAME = 'localhost:4999'
-    MONGO_URI = 'mongodb://localhost/pucktracker_testing'
+    PUCKTRACKER_URL = 'http://pucktracker-test'
     PORTAL_USERNAME = None
     PORTAL_PASSWORD = None
     PORTAL_URL = 'http://mxshiptestingportal/'
@@ -21,8 +21,8 @@ class FunctionalTestingConfig(TestingConfig):
 
 class DevelopmentConfig(Config):
     DEBUG = True
-    MONGO_URI = os.environ.get('SAMPLE_SHIP_DEV_DB',
-                               'mongodb://localhost/pucktracker_dev')
+    PUCKTRACKER_URL = os.environ.get('PUCKTRACKER_DEV_URL',
+                                     'http://localhost:8000')
     PORTAL_USERNAME = os.environ.get('PORTAL_DEV_USERNAME')
     PORTAL_PASSWORD = os.environ.get('PORTAL_DEV_PASSWORD')
     PORTAL_URL = os.environ.get('PORTAL_DEV_URL',
@@ -30,7 +30,7 @@ class DevelopmentConfig(Config):
 
 
 class ProductionConfig(Config):
-    MONGO_URI = os.environ.get('SAMPLE_SHIP_DB')
+    PUCKTRACKER_URL = os.environ.get('PUCKTRACKER_URL')
     PORTAL_USERNAME = os.environ.get('PORTAL_USERNAME')
     PORTAL_PASSWORD = os.environ.get('PORTAL_PASSWORD')
     PORTAL_URL = 'https://portal.synchrotron.org.au/api/v1'

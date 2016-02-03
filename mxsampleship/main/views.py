@@ -1,14 +1,14 @@
 from . import main
-from .. import mongo
 from ..utils import arrival_url
-from flask import render_template, url_for, redirect, abort
+from flask import current_app, render_template, url_for, redirect, abort
 from flask.ext.login import login_required, current_user
 from flask_wtf import Form
 from wtforms import (StringField, PasswordField, SubmitField, BooleanField,
                      SelectField)
 from wtforms.validators import DataRequired
 from portalapi.portalapi import RequestFailed
-import uuid
+import requests
+from urllib.parse import urljoin
 
 
 class ShipmentForm(Form):
@@ -62,13 +62,8 @@ def shipment_form():
     form = UserShipmentForm()
     if form.validate_on_submit():
         epn = form.data['epn']
-        shipment_id = str(uuid.uuid4())
-        epn_dewar_num = mongo.db.dewars.find({'epn': epn}).count() + 1
-        dewar_name = 'd-{epn}-{n}'.format(epn=epn, n=epn_dewar_num)
         containers = '{container_ids_1} | {container_ids_2}'.format(**form.data)
         dewar = {
-            'shipment_id': shipment_id,
-            'name': dewar_name,
             'epn': epn,
             'owner': form.data['owner'],
             'department': form.data['department'],
@@ -86,7 +81,10 @@ def shipment_form():
             'containerType': form.data['container_type'],
             'expectedContainers': containers,
         }
-        mongo.db.dewars.insert(dewar)
+        url = urljoin(current_app.config['PUCKTRACKER_URL'], 'dewars/new')
+        response = requests.post(url, json=dewar)
+        # TODO: Handle errors
+        shipment_id = response.json()['data']['_id']
         return redirect(url_for('.shipment', shipment_id=shipment_id))
     scientist = current_user.api.get_scientist()
     full_name = '{user.first_names} {user.last_name}'.format(user=scientist)
@@ -100,9 +98,12 @@ def shipment_form():
 @main.route('/shipment/<shipment_id>')
 @login_required
 def shipment(shipment_id):
-    dewars = list(mongo.db.dewars.find({'shipment_id': shipment_id}))
-    for dewar in dewars:
-        dewar['qrcode_data'] = arrival_url(dewar)
-    if not dewars:
+    endpoint = 'dewars/%s' % shipment_id
+    url = urljoin(current_app.config['PUCKTRACKER_URL'], endpoint)
+    response = requests.get(url)
+    # TODO: Handle errors
+    if response.status_code != 200:
         abort(404)
-    return render_template('main/shipment-slip.html', dewars=dewars)
+    dewar = response.json()['data']
+    dewar['qrcode_data'] = arrival_url(dewar)
+    return render_template('main/shipment-slip.html', dewars=[dewar])
