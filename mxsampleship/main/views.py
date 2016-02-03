@@ -7,6 +7,7 @@ from flask_wtf import Form
 from wtforms import (StringField, PasswordField, SubmitField, BooleanField,
                      SelectField)
 from wtforms.validators import DataRequired
+from portalapi.portalapi import RequestFailed
 import uuid
 
 
@@ -43,7 +44,15 @@ def index():
 @login_required
 def shipment_form():
 
-    visits = current_user.api.get_scientist_visits()
+    # There is a bug with the portal api server which causes an invalid
+    # response when a user has no EPNs. This causes a RequestFailed exception
+    # to be raised.
+    try:
+        visits = current_user.api.get_scientist_visits()
+    except RequestFailed:
+        visits = []
+
+    # TODO: if visits is empty redirect to another page?
     epn_text_fmt = '{0.epn} @ {0.start_time:%Y-%m-%d %H:%M}'
     epn_choices = [(visit.epn, epn_text_fmt.format(visit)) for visit in visits]
 

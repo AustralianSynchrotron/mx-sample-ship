@@ -12,7 +12,7 @@ itsdangerous==0.24
 Jinja2==2.8
 MarkupSafe==0.23
 Pillow==3.1.0
-portalapi==0.2.2
+portalapi==0.2.3
 py==1.4.31
 pymongo==3.2
 pytest==2.8.7

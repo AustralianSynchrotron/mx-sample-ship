@@ -21,10 +21,12 @@ class FunctionalTestingConfig(TestingConfig):
 
 class DevelopmentConfig(Config):
     DEBUG = True
-    MONGO_URI = 'mongodb://localhost/pucktracker_dev'
+    MONGO_URI = os.environ.get('SAMPLE_SHIP_DEV_DB',
+                               'mongodb://localhost/pucktracker_dev')
     PORTAL_USERNAME = os.environ.get('PORTAL_DEV_USERNAME')
     PORTAL_PASSWORD = os.environ.get('PORTAL_DEV_PASSWORD')
-    PORTAL_URL = 'http://localhost:7000/api/v1'
+    PORTAL_URL = os.environ.get('PORTAL_DEV_URL',
+                                'http://localhost:7000/api/v1')
 
 
 class ProductionConfig(Config):

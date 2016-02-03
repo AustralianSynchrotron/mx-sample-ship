@@ -16,6 +16,6 @@ setup(
         'Flask-QRcode>=0.6.0',
         'Flask-Script>=2.0.5',
         'Flask-WTF>=0.12',
-        'portalapi>=0.2.2',
+        'portalapi>=0.2.3',
     ],
 )

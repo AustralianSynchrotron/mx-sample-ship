@@ -1,4 +1,5 @@
 from mxsampleship import create_app, mongo
+from portalapi.portalapi import RequestFailed
 from flask import url_for
 import pytest
 from bs4 import BeautifulSoup
@@ -37,13 +38,25 @@ def test_shipment_form_redirects_to_login(client):
 def test_shipment_form_renders_after_login(logged_in_client):
     response = logged_in_client.get(url_for('main.shipment_form'))
     assert response.status_code == 200
-    html = response.data.decode('utf-8')
     page = BeautifulSoup(response.data, 'html.parser')
     assert 'MX Sample Shipment' in page.title
-    assert 'Full Name' in html
+    assert 'Full Name' in page.text
     epn_option = page.find(id='epn').option
     assert epn_option.text == '123a @ 2016-04-29 08:00'
     assert epn_option['value'] == '123a'
+
+
+def test_shipment_form_renders_when_get_visits_endpoint_is_empty(logged_in_client,
+                                                                 monkeypatch):
+    def get_scientist_visits_patch(api):
+        raise RequestFailed()
+    monkeypatch.setattr('portalapi.PortalAPI.get_scientist_visits',
+                        get_scientist_visits_patch)
+
+    response = logged_in_client.get(url_for('main.shipment_form'))
+    assert response.status_code == 200
+    page = BeautifulSoup(response.data, 'html.parser')
+    assert 'MX Sample Shipment' in page.h1
 
 
 def test_form_submits(logged_in_client):
