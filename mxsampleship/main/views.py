@@ -8,7 +8,7 @@ from wtforms import (StringField, PasswordField, SubmitField, BooleanField,
 from wtforms.validators import DataRequired
 from portalapi.portalapi import RequestFailed
 import requests
-from urllib.parse import urljoin
+from six.moves.urllib.parse import urljoin
 
 
 class ShipmentForm(Form):
