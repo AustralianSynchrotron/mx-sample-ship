@@ -17,4 +17,4 @@ def test_login_renders(client):
     assert response.status_code == 200
     html = response.data.decode('utf-8')
     assert 'Login' in html
-    assert 'Username' in html
+    assert 'Email' in html

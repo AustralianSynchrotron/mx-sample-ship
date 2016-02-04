@@ -1,5 +1,5 @@
 from . import main
-from ..utils import arrival_url
+from ..utils import arrival_data
 from flask import current_app, render_template, url_for, redirect, abort
 from flask.ext.login import login_required, current_user
 from flask_wtf import Form
@@ -105,5 +105,5 @@ def shipment(shipment_id):
     if response.status_code != 200:
         abort(404)
     dewar = response.json()['data']
-    dewar['qrcode_data'] = arrival_url(dewar)
+    dewar['qrcode_data'] = arrival_data(dewar)
     return render_template('main/shipment-slip.html', dewars=[dewar])

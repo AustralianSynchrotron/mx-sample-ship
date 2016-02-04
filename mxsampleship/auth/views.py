@@ -10,7 +10,7 @@ import json
 
 
 class LoginForm(Form):
-    username = StringField('Username', validators=[DataRequired()])
+    username = StringField('Email', validators=[DataRequired()])
     password = PasswordField('Password', validators=[DataRequired()])
     submit = SubmitField('Login')
 

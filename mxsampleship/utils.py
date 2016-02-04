@@ -1,6 +1,12 @@
-from six.moves.urllib.parse import urlencode
+import json
 
 
-def arrival_url(dewar):
-    query = urlencode([('id', dewar['name']), ('action', 'Arrived')])
-    return 'http://10.108.24.6/dewartrack_ipad.php?%s' % query
+def arrival_data(dewar):
+    data = {
+        'type': 'UPDATE_DEWAR',
+        'dewar': dewar['name'],
+        'update': {
+            'onsite': True
+        }
+    }
+    return json.dumps(data)
