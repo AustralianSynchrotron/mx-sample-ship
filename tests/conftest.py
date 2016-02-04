@@ -1,13 +1,13 @@
 from portalapi.models import Scientist, Visit
 import pytest
 from pytz import UTC
-from datetime import datetime
+from datetime import datetime, timedelta
 
 
 def login_patch(auth, username=None, password=None):
     auth._token = '1a2b3c'
     auth._lifespan = 3600
-    auth._expires = UTC.localize(datetime.now())
+    auth._expires = UTC.localize(datetime.now() + timedelta(hours=1))
     return True
 
 

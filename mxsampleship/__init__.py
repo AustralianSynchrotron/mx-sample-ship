@@ -5,7 +5,7 @@ from flask.ext.bootstrap import Bootstrap
 from .config import config
 
 
-__version__ = '0.2.0'
+__version__ = '0.2.1'
 
 
 login_manager = LoginManager()
@@ -24,9 +24,9 @@ def create_app(config_name):
     bootstrap.init_app(app)
 
     from .main import main as main_blueprint
-    app.register_blueprint(main_blueprint)
+    app.register_blueprint(main_blueprint, url_prefix='/ship')
 
     from .auth import auth as auth_blueprint
-    app.register_blueprint(auth_blueprint)
+    app.register_blueprint(auth_blueprint, url_prefix='/ship')
 
     return app

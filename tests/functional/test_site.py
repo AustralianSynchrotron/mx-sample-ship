@@ -3,6 +3,11 @@ from flask import url_for
 import pytest
 from vcr import VCR
 from threading import Thread
+import os
+
+
+pytestmark = pytest.mark.skipif('DISPLAY' not in os.environ,
+				reason='Display required')
 
 
 vcr = VCR(cassette_library_dir='tests/fixtures/cassettes')

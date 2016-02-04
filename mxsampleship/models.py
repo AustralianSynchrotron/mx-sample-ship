@@ -7,7 +7,9 @@ import json
 
 @login_manager.user_loader
 def load_user(data):
-    return User(token_data=json.loads(data))
+    user = User(token_data=json.loads(data))
+    if user.auth.is_valid():
+        return user
 
 
 class User(UserMixin):

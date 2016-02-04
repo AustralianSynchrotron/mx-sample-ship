@@ -127,3 +127,11 @@ def test_shipment_view(logged_in_client):
     html = response.data.decode('utf-8')
     assert 'The Dewar ID is: d-123a-1' in html
     assert '123 Main Road' in html
+
+
+def test_directed_to_login_if_token_invalid(logged_in_client, monkeypatch):
+    def is_valid_patch(auth):
+        return False
+    monkeypatch.setattr('portalapi.Authentication.is_valid', is_valid_patch)
+    response = logged_in_client.get(url_for('main.shipment_form'))
+    assert response.status_code == 302
