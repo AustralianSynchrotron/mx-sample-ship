@@ -1,10 +1,13 @@
 from portalapi.models import Scientist, Visit
+from portalapi.authentication import AuthenticationFailed
 import pytest
 from pytz import UTC
 from datetime import datetime, timedelta
 
 
 def login_patch(auth, username=None, password=None):
+    if username != 'jane' or password != 'secret':
+        raise AuthenticationFailed()
     auth._token = '1a2b3c'
     auth._lifespan = 3600
     auth._expires = UTC.localize(datetime.now() + timedelta(hours=1))

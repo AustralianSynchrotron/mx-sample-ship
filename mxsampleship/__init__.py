@@ -10,6 +10,7 @@ __version__ = '0.2.1'
 
 login_manager = LoginManager()
 login_manager.login_view = 'auth.login'
+login_manager.login_message = None
 bootstrap = Bootstrap()
 qrcode = QRcode()
 
