@@ -17,7 +17,7 @@ qrcode = QRcode()
 
 def create_app(config_name):
 
-    app = Flask(__name__)
+    app = Flask(__name__, static_url_path='/ship/static')
     app.config.from_object(config[config_name])
 
     login_manager.init_app(app)

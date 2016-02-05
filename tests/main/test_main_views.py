@@ -5,6 +5,7 @@ import pytest
 import responses
 from bs4 import BeautifulSoup
 from six import string_types
+from six.moves.urllib.parse import urlsplit
 import json
 
 
@@ -24,6 +25,15 @@ def client():
 def logged_in_client(client):
     client.post(url_for('auth.login'), data=LOGIN_DATA)
     yield client
+
+
+def test_routes_should_have_url_prefix(client):
+    assert urlsplit(url_for('main.index')).path == '/ship/'
+
+
+def test_static_routes_should_have_url_prefix(client):
+    url = url_for('static', filename='js/knockout.js')
+    assert urlsplit(url).path == '/ship/static/js/knockout.js'
 
 
 def test_shipment_form_redirects_to_login(client):
