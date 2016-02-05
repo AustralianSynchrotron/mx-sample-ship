@@ -135,3 +135,13 @@ def test_directed_to_login_if_token_invalid(logged_in_client, monkeypatch):
     monkeypatch.setattr('portalapi.Authentication.is_valid', is_valid_patch)
     response = logged_in_client.get(url_for('main.shipment_form'))
     assert response.status_code == 302
+
+
+def test_should_display_a_logout_link_when_logged_in(logged_in_client):
+    response = logged_in_client.get(url_for('main.shipment_form'))
+    assert 'Log out' in response.data.decode('utf-8')
+
+
+def test_should_not_display_logout_if_not_logged_in(client):
+    response = client.get(url_for('auth.login'))
+    assert 'Log out' not in response.data.decode('utf-8')

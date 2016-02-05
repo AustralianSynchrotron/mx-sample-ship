@@ -62,3 +62,13 @@ def test_user_can_submit_form(browser):
     assert browser.is_text_present('Contact Email: jane@example.com')
     assert browser.is_text_present('Samples related to experiment: 123a')
     assert browser.is_text_present('The Dewar ID is: d-123a-1')
+
+
+def test_user_can_log_out(browser):
+    browser.visit(url_for('main.shipment_form'))
+    browser.fill('username', 'jane')
+    browser.fill('password', 'secret')
+    browser.find_by_name('submit').first.click()
+    browser.find_by_text('Log out').first.click()
+    assert browser.url == url_for('auth.login')
+
