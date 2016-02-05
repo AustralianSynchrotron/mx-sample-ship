@@ -22,9 +22,21 @@
     {{ form.csrf_token }}
     {{ fields([
         'owner', 'department', 'institute', 'street_address', 'city', 'state',
-        'postcode', 'country', 'phone', 'email', 'epn',
+        'postcode', 'country', 'phone', 'email'
       ])
     }}
+    <div class="form-group">
+      {{ form.epn.label(class='control-label col-md-4') }}
+      <div class="col-md-5">
+        {{ form.epn( class='form-control', **{'data-bind': 'value: epn'}) }}
+      </div>
+    </div>
+    <div class="form-group" data-bind="visible: shouldShowOtherEpn">
+      {{ form.other_epn.label(class='control-label col-md-4') }}
+      <div class="col-md-5">
+        {{ form.other_epn(class='form-control') }}
+      </div>
+    </div>
     <div class="form-group">
       <div class="col-md-offset-4 col-md-5 checkbox">
         <label>{{ form.return_dewar() }}{{ form.return_dewar.label.text }}</label>
@@ -41,4 +53,18 @@
       </div>
     </div>
   </form>
+{% endblock %}
+
+
+{% block scripts %}
+{{ super() }}
+<script>
+function ShipmentFormViewModel () {
+  this.epn = ko.observable()
+  this.shouldShowOtherEpn = ko.computed(function () {
+    return this.epn() === 'other'
+  }, this)
+}
+ko.applyBindings(new ShipmentFormViewModel())
+</script>
 {% endblock %}

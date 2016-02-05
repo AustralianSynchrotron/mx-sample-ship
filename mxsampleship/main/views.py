@@ -23,6 +23,7 @@ class ShipmentForm(Form):
     phone = StringField('Contact Phone Number')
     email = StringField('Contact Email')
     # epn field must be generated when subclassing the ShipmentForm
+    other_epn = StringField('Other EPN')
     return_dewar = BooleanField('Return dewar?')
     courier = StringField('Courier')
     courier_account = StringField('Courier Account Number')
@@ -52,9 +53,9 @@ def shipment_form():
     except RequestFailed:
         visits = []
 
-    # TODO: if visits is empty redirect to another page?
     epn_text_fmt = '{0.epn} @ {0.start_time:%Y-%m-%d %H:%M}'
     epn_choices = [(visit.epn, epn_text_fmt.format(visit)) for visit in visits]
+    epn_choices.append(('other', 'other'))
 
     class UserShipmentForm(ShipmentForm):
         epn = SelectField('Experiment Proposal Number', choices=epn_choices)
@@ -62,6 +63,8 @@ def shipment_form():
     form = UserShipmentForm()
     if form.validate_on_submit():
         epn = form.data['epn']
+        if epn == 'other':
+            epn = form.data['other_epn']
         containers = '{container_ids_1} | {container_ids_2}'.format(**form.data)
         dewar = {
             'epn': epn,

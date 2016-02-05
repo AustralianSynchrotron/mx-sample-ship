@@ -13,6 +13,15 @@ pytestmark = pytest.mark.skipif('DISPLAY' not in os.environ,
 vcr = VCR(cassette_library_dir='tests/fixtures/cassettes')
 
 
+@pytest.yield_fixture
+def logged_in_browser(browser):
+    browser.visit(url_for('main.shipment_form'))
+    browser.fill('username', 'jane')
+    browser.fill('password', 'secret')
+    browser.find_by_name('submit').first.click()
+    yield browser
+
+
 @pytest.yield_fixture(scope='module', autouse=True)
 def app():
     app = create_app('functional-testing')
@@ -26,11 +35,8 @@ def app():
 
 
 @vcr.use_cassette()
-def test_user_can_submit_form(browser):
-    browser.visit(url_for('main.shipment_form'))
-    browser.fill('username', 'jane')
-    browser.fill('password', 'secret')
-    browser.find_by_name('submit').first.click()
+def test_user_can_submit_form(logged_in_browser):
+    browser = logged_in_browser
     assert browser.url == url_for('main.shipment_form')
     browser.fill('owner', 'Jane Doe')
     browser.fill('department', 'Chemistry')
@@ -64,11 +70,18 @@ def test_user_can_submit_form(browser):
     assert browser.is_text_present('The Dewar ID is: d-123a-1')
 
 
-def test_user_can_log_out(browser):
-    browser.visit(url_for('main.shipment_form'))
-    browser.fill('username', 'jane')
-    browser.fill('password', 'secret')
-    browser.find_by_name('submit').first.click()
-    browser.find_by_text('Log out').first.click()
-    assert browser.url == url_for('auth.login')
+def test_user_can_log_out(logged_in_browser):
+    logged_in_browser.find_by_text('Log out').first.click()
+    assert logged_in_browser.url == url_for('auth.login')
 
+
+@vcr.use_cassette()
+def test_user_can_submit_form_with_other_epn(logged_in_browser):
+    browser = logged_in_browser
+    assert browser.url == url_for('main.shipment_form')
+    assert browser.find_by_name('other_epn').visible == False
+    browser.select('epn', 'other')
+    assert browser.find_by_name('other_epn').visible == True
+    browser.fill('other_epn', 'my-epn')
+    browser.find_by_name('submit').first.click()
+    assert browser.is_text_present('Samples related to experiment: my-epn')
