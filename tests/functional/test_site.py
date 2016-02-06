@@ -68,7 +68,7 @@ def test_user_can_submit_form(logged_in_browser):
     assert browser.is_text_present('Contact Email: jane@example.com')
     assert browser.find_by_id('epn').text == 'Samples related to experiment: 123a'
     assert browser.find_by_id('dewar').text == 'The Dewar ID is: d-123a-1'
-    assert browser.find_by_id('samples').text == 'Samples: 1,2,3,4,5,6,7,8'
+    assert '1,2,3,4,5,6,7,8' in browser.find_by_id('containers').text
 
 
 def test_user_can_log_out(logged_in_browser):
@@ -111,7 +111,7 @@ def test_user_can_submit_form_with_cassettes(logged_in_browser):
     browser.fill('cassettes-0', 'CAS001')
     browser.fill('cassettes-1', 'CAS002')
     browser.find_by_name('submit').first.click()
-    assert browser.find_by_id('samples').text == 'Samples: CAS001,CAS002'
+    assert  'CAS001,CAS002' in browser.find_by_id('containers').text
 
 
 @vcr.use_cassette()
@@ -121,5 +121,5 @@ def test_user_can_submit_form_with_canes(logged_in_browser):
     browser.select('container_type', 'canes')
     browser.fill('canes', 'some great canes')
     browser.find_by_name('submit').first.click()
-    assert browser.find_by_id('samples').text == 'Samples: some great canes'
+    assert 'some great canes' in browser.find_by_id('containers').text
 
