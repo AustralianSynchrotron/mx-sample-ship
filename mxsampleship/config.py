@@ -3,6 +3,7 @@ import os
 
 class Config(object):
     SECRET_KEY = os.environ['SECRET_KEY']
+    CACHE_TYPE = None
 
 
 class TestingConfig(Config):

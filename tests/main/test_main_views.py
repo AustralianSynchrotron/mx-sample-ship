@@ -85,8 +85,9 @@ def test_form_submits(logged_in_client):
         'courier': 'Fast Deliveries',
         'courier_account': '999',
         'container_type': 'pucks',
-        'container_ids_1': 'ASP001,ASP002',
-        'container_ids_2': 'ASP003',
+        'pucks-0': '1',
+        'pucks-1': '2',
+        'pucks-2': '3',
     }
     response = logged_in_client.post(url_for('main.shipment_form'), data=data)
     assert response.status_code == 302
@@ -107,7 +108,7 @@ def test_form_submits(logged_in_client):
     assert dewar['courier'] == 'Fast Deliveries'
     assert dewar['courierAccount'] == '999'
     assert dewar['containerType'] == 'pucks'
-    assert dewar['expectedContainers'] == 'ASP001,ASP002 | ASP003'
+    assert dewar['expectedContainers'] == '1,2,3,,,,,'
 
 
 @responses.activate
@@ -129,7 +130,7 @@ def test_shipment_view(logged_in_client):
         'courier': 'Fast Deliveries',
         'courierAccount': '999',
         'containerType': 'pucks',
-        'expectedContainers': 'ASP001,ASP002 | ASP003',
+        'expectedContainers': '1,2,3,4,5,,,',
     }
     responses.add(responses.GET, 'http://localhost:8002/dewars/1a',
                   json={'error': None, 'data': dewar})
@@ -137,6 +138,7 @@ def test_shipment_view(logged_in_client):
     html = response.data.decode('utf-8')
     assert 'The Dewar ID is: d-123a-1' in html
     assert '123 Main Road' in html
+    assert '1,2,3,4,5' in html
 
 
 def test_directed_to_login_if_token_invalid(logged_in_client, monkeypatch):

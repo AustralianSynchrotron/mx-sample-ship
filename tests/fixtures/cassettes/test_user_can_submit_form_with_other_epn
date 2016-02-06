@@ -1,30 +1,32 @@
 interactions:
 - request:
-    body: '{"city": "", "courier": "", "phone": "111-222-333", "institute": "Some
-      University", "country": "", "containerType": "pucks", "courierAccount": "",
-      "state": "", "epn": "my-epn", "department": "", "streetAddress": "", "postcode":
-      "", "expectedContainers": " | ", "owner": "Jane Doe", "returnDewar": false,
-      "email": "jane@example.com"}'
+    body: !!binary |
+      eyJkZXBhcnRtZW50IjogIiIsICJzdGF0ZSI6ICIiLCAiZXhwZWN0ZWRDb250YWluZXJzIjogIiws
+      LCwsLCwiLCAiaW5zdGl0dXRlIjogIlNvbWUgVW5pdmVyc2l0eSIsICJzdHJlZXRBZGRyZXNzIjog
+      IiIsICJwaG9uZSI6ICIxMTEtMjIyLTMzMyIsICJjaXR5IjogIiIsICJyZXR1cm5EZXdhciI6IGZh
+      bHNlLCAiZW1haWwiOiAiamFuZUBleGFtcGxlLmNvbSIsICJjb3VudHJ5IjogIiIsICJlcG4iOiAi
+      bXktZXBuIiwgInBvc3Rjb2RlIjogIiIsICJjb250YWluZXJUeXBlIjogInB1Y2tzIiwgIm93bmVy
+      IjogIkphbmUgRG9lIiwgImNvdXJpZXJBY2NvdW50IjogIiIsICJjb3VyaWVyIjogIiJ9
     headers:
       Accept: ['*/*']
       Accept-Encoding: ['gzip, deflate']
       Connection: [keep-alive]
-      Content-Length: ['332']
+      Content-Length: ['336']
       Content-Type: [application/json]
       User-Agent: [python-requests/2.9.1]
     method: POST
     uri: http://localhost:8002/dewars/new
   response:
-    body: {string: !!python/unicode '{"data":{"__v":0,"city":"","courier":"","phone":"111-222-333","institute":"Some
-        University","country":"","containerType":"pucks","courierAccount":"","state":"","epn":"my-epn","department":"","streetAddress":"","postcode":"","expectedContainers":"
-        | ","owner":"Jane Doe","returnDewar":false,"email":"jane@example.com","name":"d-my-epn-3","_id":"56b413a2a282fe836b16058e"}}'}
+    body: {string: '{"data":{"__v":0,"department":"","state":"","expectedContainers":",,,,,,,","institute":"Some
+        University","streetAddress":"","phone":"111-222-333","city":"","returnDewar":false,"email":"jane@example.com","country":"","epn":"my-epn","postcode":"","containerType":"pucks","owner":"Jane
+        Doe","courierAccount":"","courier":"","name":"d-my-epn-1","_id":"56b5cb46f39f201d8195a8e1"}}'}
     headers:
-      connection: [keep-alive]
-      content-length: ['371']
-      content-type: [application/json; charset=utf-8]
-      date: ['Fri, 05 Feb 2016 03:14:42 GMT']
-      etag: [W/"173-zivbd9GDPSLS4MiLuJ4RZw"]
-      x-powered-by: [Express]
+      Connection: [keep-alive]
+      Content-Length: ['375']
+      Content-Type: [application/json; charset=utf-8]
+      Date: ['Sat, 06 Feb 2016 10:30:30 GMT']
+      ETag: [W/"177-I9+uk8C2z+AHoXWXdnvczA"]
+      X-Powered-By: [Express]
     status: {code: 200, message: OK}
 - request:
     body: null
@@ -34,17 +36,17 @@ interactions:
       Connection: [keep-alive]
       User-Agent: [python-requests/2.9.1]
     method: GET
-    uri: http://localhost:8002/dewars/56b413a2a282fe836b16058e
+    uri: http://localhost:8002/dewars/56b5cb46f39f201d8195a8e1
   response:
-    body: {string: !!python/unicode '{"data":{"_id":"56b413a2a282fe836b16058e","city":"","courier":"","phone":"111-222-333","institute":"Some
-        University","country":"","containerType":"pucks","courierAccount":"","state":"","epn":"my-epn","department":"","streetAddress":"","postcode":"","expectedContainers":"
-        | ","owner":"Jane Doe","returnDewar":false,"email":"jane@example.com","name":"d-my-epn-3","__v":0}}'}
+    body: {string: '{"data":{"_id":"56b5cb46f39f201d8195a8e1","department":"","state":"","expectedContainers":",,,,,,,","institute":"Some
+        University","streetAddress":"","phone":"111-222-333","city":"","returnDewar":false,"email":"jane@example.com","country":"","epn":"my-epn","postcode":"","containerType":"pucks","owner":"Jane
+        Doe","courierAccount":"","courier":"","name":"d-my-epn-1","__v":0}}'}
     headers:
-      connection: [keep-alive]
-      content-length: ['371']
-      content-type: [application/json; charset=utf-8]
-      date: ['Fri, 05 Feb 2016 03:14:42 GMT']
-      etag: [W/"173-IJBaApAZOukWzhmvFXm94Q"]
-      x-powered-by: [Express]
+      Connection: [keep-alive]
+      Content-Length: ['375']
+      Content-Type: [application/json; charset=utf-8]
+      Date: ['Sat, 06 Feb 2016 10:30:30 GMT']
+      ETag: [W/"177-dzvMaNY//b81mCxbZpSIsQ"]
+      X-Powered-By: [Express]
     status: {code: 200, message: OK}
 version: 1

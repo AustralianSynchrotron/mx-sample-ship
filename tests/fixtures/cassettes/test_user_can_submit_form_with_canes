@@ -1,0 +1,53 @@
+interactions:
+- request:
+    body: !!binary |
+      eyJkZXBhcnRtZW50IjogIiIsICJyZXR1cm5EZXdhciI6IGZhbHNlLCAic3RhdGUiOiAiIiwgImNv
+      dW50cnkiOiAiIiwgInBvc3Rjb2RlIjogIiIsICJwaG9uZSI6ICIxMTEtMjIyLTMzMyIsICJpbnN0
+      aXR1dGUiOiAiU29tZSBVbml2ZXJzaXR5IiwgImV4cGVjdGVkQ29udGFpbmVycyI6ICJzb21lIGdy
+      ZWF0IGNhbmVzIiwgImVtYWlsIjogImphbmVAZXhhbXBsZS5jb20iLCAib3duZXIiOiAiSmFuZSBE
+      b2UiLCAiY291cmllckFjY291bnQiOiAiIiwgImNvbnRhaW5lclR5cGUiOiAiY2FuZXMiLCAiZXBu
+      IjogIjEyM2EiLCAiY2l0eSI6ICIiLCAic3RyZWV0QWRkcmVzcyI6ICIiLCAiY291cmllciI6ICIi
+      fQ==
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      Content-Length: ['343']
+      Content-Type: [application/json]
+      User-Agent: [python-requests/2.9.1]
+    method: POST
+    uri: http://localhost:8002/dewars/new
+  response:
+    body: {string: '{"data":{"__v":0,"department":"","returnDewar":false,"state":"","country":"","postcode":"","phone":"111-222-333","institute":"Some
+        University","expectedContainers":"some great canes","email":"jane@example.com","owner":"Jane
+        Doe","courierAccount":"","containerType":"canes","epn":"123a","city":"","streetAddress":"","courier":"","name":"d-123a-3","_id":"56b5ccf3f39f201d8195a8e3"}}'}
+    headers:
+      Connection: [keep-alive]
+      Content-Length: ['380']
+      Content-Type: [application/json; charset=utf-8]
+      Date: ['Sat, 06 Feb 2016 10:37:39 GMT']
+      ETag: [W/"17c-l3If+/TC347vYk2/qChxLQ"]
+      X-Powered-By: [Express]
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.9.1]
+    method: GET
+    uri: http://localhost:8002/dewars/56b5ccf3f39f201d8195a8e3
+  response:
+    body: {string: '{"data":{"_id":"56b5ccf3f39f201d8195a8e3","department":"","returnDewar":false,"state":"","country":"","postcode":"","phone":"111-222-333","institute":"Some
+        University","expectedContainers":"some great canes","email":"jane@example.com","owner":"Jane
+        Doe","courierAccount":"","containerType":"canes","epn":"123a","city":"","streetAddress":"","courier":"","name":"d-123a-3","__v":0}}'}
+    headers:
+      Connection: [keep-alive]
+      Content-Length: ['380']
+      Content-Type: [application/json; charset=utf-8]
+      Date: ['Sat, 06 Feb 2016 10:37:39 GMT']
+      ETag: [W/"17c-dTvKBYd3Q7CX7fUkvokJOw"]
+      X-Powered-By: [Express]
+    status: {code: 200, message: OK}
+version: 1

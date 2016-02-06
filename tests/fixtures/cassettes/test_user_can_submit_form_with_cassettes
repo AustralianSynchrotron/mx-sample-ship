@@ -1,0 +1,51 @@
+interactions:
+- request:
+    body: !!binary |
+      eyJzdHJlZXRBZGRyZXNzIjogIiIsICJvd25lciI6ICJKYW5lIERvZSIsICJkZXBhcnRtZW50Ijog
+      IiIsICJlcG4iOiAiMTIzYSIsICJjb3VyaWVyQWNjb3VudCI6ICIiLCAiaW5zdGl0dXRlIjogIlNv
+      bWUgVW5pdmVyc2l0eSIsICJjb3VudHJ5IjogIiIsICJleHBlY3RlZENvbnRhaW5lcnMiOiAiQ0FT
+      MDAxLENBUzAwMiIsICJjaXR5IjogIiIsICJlbWFpbCI6ICJqYW5lQGV4YW1wbGUuY29tIiwgImNv
+      dXJpZXIiOiAiIiwgInBob25lIjogIjExMS0yMjItMzMzIiwgInJldHVybkRld2FyIjogZmFsc2Us
+      ICJwb3N0Y29kZSI6ICIiLCAiY29udGFpbmVyVHlwZSI6ICJjYXNzZXR0ZXMiLCAic3RhdGUiOiAi
+      In0=
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      Content-Length: ['344']
+      Content-Type: [application/json]
+      User-Agent: [python-requests/2.9.1]
+    method: POST
+    uri: http://localhost:8002/dewars/new
+  response:
+    body: {string: '{"data":{"__v":0,"streetAddress":"","owner":"Jane Doe","department":"","epn":"123a","courierAccount":"","institute":"Some
+        University","country":"","expectedContainers":"CAS001,CAS002","city":"","email":"jane@example.com","courier":"","phone":"111-222-333","returnDewar":false,"postcode":"","containerType":"cassettes","state":"","name":"d-123a-2","_id":"56b5cc71f39f201d8195a8e2"}}'}
+    headers:
+      Connection: [keep-alive]
+      Content-Length: ['381']
+      Content-Type: [application/json; charset=utf-8]
+      Date: ['Sat, 06 Feb 2016 10:35:29 GMT']
+      ETag: [W/"17d-g6KDTKBJBso+GIgSb1pHXg"]
+      X-Powered-By: [Express]
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.9.1]
+    method: GET
+    uri: http://localhost:8002/dewars/56b5cc71f39f201d8195a8e2
+  response:
+    body: {string: '{"data":{"_id":"56b5cc71f39f201d8195a8e2","streetAddress":"","owner":"Jane
+        Doe","department":"","epn":"123a","courierAccount":"","institute":"Some University","country":"","expectedContainers":"CAS001,CAS002","city":"","email":"jane@example.com","courier":"","phone":"111-222-333","returnDewar":false,"postcode":"","containerType":"cassettes","state":"","name":"d-123a-2","__v":0}}'}
+    headers:
+      Connection: [keep-alive]
+      Content-Length: ['381']
+      Content-Type: [application/json; charset=utf-8]
+      Date: ['Sat, 06 Feb 2016 10:35:29 GMT']
+      ETag: [W/"17d-i66HF7Wk7kpEyTYdNrYLaQ"]
+      X-Powered-By: [Express]
+    status: {code: 200, message: OK}
+version: 1

@@ -5,7 +5,7 @@ from flask.ext.bootstrap import Bootstrap
 from .config import config
 
 
-__version__ = '0.2.1'
+__version__ = '0.3.0'
 
 
 login_manager = LoginManager()

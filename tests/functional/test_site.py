@@ -53,8 +53,8 @@ def test_user_can_submit_form(logged_in_browser):
     browser.fill('courier', 'Fast Deliveries')
     browser.fill('courier_account', '122333')
     browser.select('container_type', 'pucks')
-    browser.fill('container_ids_1', 'ASP0001,ASP0002,ASP0003,ASP0004')
-    browser.fill('container_ids_2', 'ASP0006,ASP0007,ASP0008,ASP0009')
+    for idx in range(8):
+        browser.fill('pucks-%s' % idx, idx + 1)
     browser.find_by_name('submit').first.click()
     assert browser.is_text_present('Jane Doe')
     assert browser.is_text_present('Chemistry')
@@ -66,8 +66,9 @@ def test_user_can_submit_form(logged_in_browser):
     assert browser.is_text_present('Australia')
     assert browser.is_text_present('Contact Phone: 123-456-789')
     assert browser.is_text_present('Contact Email: jane@example.com')
-    assert browser.is_text_present('Samples related to experiment: 123a')
-    assert browser.is_text_present('The Dewar ID is: d-123a-1')
+    assert browser.find_by_id('epn').text == 'Samples related to experiment: 123a'
+    assert browser.find_by_id('dewar').text == 'The Dewar ID is: d-123a-1'
+    assert browser.find_by_id('samples').text == 'Samples: 1,2,3,4,5,6,7,8'
 
 
 def test_user_can_log_out(logged_in_browser):
@@ -78,10 +79,47 @@ def test_user_can_log_out(logged_in_browser):
 @vcr.use_cassette()
 def test_user_can_submit_form_with_other_epn(logged_in_browser):
     browser = logged_in_browser
-    assert browser.url == url_for('main.shipment_form')
     assert browser.find_by_name('other_epn').visible == False
     browser.select('epn', 'other')
     assert browser.find_by_name('other_epn').visible == True
     browser.fill('other_epn', 'my-epn')
     browser.find_by_name('submit').first.click()
     assert browser.is_text_present('Samples related to experiment: my-epn')
+
+
+def test_shows_correct_fields_for_each_container_type(logged_in_browser):
+    browser = logged_in_browser
+    browser.select('container_type', 'pucks')
+    assert browser.find_by_id('pucks').visible == True
+    assert browser.find_by_id('cassettes').visible == False
+    assert browser.find_by_id('canes').visible == False
+    browser.select('container_type', 'cassettes')
+    assert browser.find_by_id('pucks').visible == False
+    assert browser.find_by_id('cassettes').visible == True
+    assert browser.find_by_id('canes').visible == False
+    browser.select('container_type', 'canes')
+    assert browser.find_by_id('pucks').visible == False
+    assert browser.find_by_id('cassettes').visible == False
+    assert browser.find_by_id('canes').visible == True
+
+
+@vcr.use_cassette()
+def test_user_can_submit_form_with_cassettes(logged_in_browser):
+    browser = logged_in_browser
+    browser.fill('owner', 'Jane Doe')
+    browser.select('container_type', 'cassettes')
+    browser.fill('cassettes-0', 'CAS001')
+    browser.fill('cassettes-1', 'CAS002')
+    browser.find_by_name('submit').first.click()
+    assert browser.find_by_id('samples').text == 'Samples: CAS001,CAS002'
+
+
+@vcr.use_cassette()
+def test_user_can_submit_form_with_canes(logged_in_browser):
+    browser = logged_in_browser
+    browser.fill('owner', 'Jane Doe')
+    browser.select('container_type', 'canes')
+    browser.fill('canes', 'some great canes')
+    browser.find_by_name('submit').first.click()
+    assert browser.find_by_id('samples').text == 'Samples: some great canes'
+

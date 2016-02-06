@@ -1,35 +1,33 @@
 interactions:
 - request:
     body: !!binary |
-      eyJjb250YWluZXJUeXBlIjogInB1Y2tzIiwgImVwbiI6ICIxMjNhIiwgImNvdXJpZXIiOiAiRmFz
-      dCBEZWxpdmVyaWVzIiwgImV4cGVjdGVkQ29udGFpbmVycyI6ICJBU1AwMDAxLEFTUDAwMDIsQVNQ
-      MDAwMyxBU1AwMDA0IHwgQVNQMDAwNixBU1AwMDA3LEFTUDAwMDgsQVNQMDAwOSIsICJyZXR1cm5E
-      ZXdhciI6IHRydWUsICJvd25lciI6ICJKYW5lIERvZSIsICJlbWFpbCI6ICJqYW5lQGV4YW1wbGUu
-      Y29tIiwgInN0YXRlIjogIlZJQyIsICJkZXBhcnRtZW50IjogIkNoZW1pc3RyeSIsICJjb3VyaWVy
-      QWNjb3VudCI6ICIxMjIzMzMiLCAic3RyZWV0QWRkcmVzcyI6ICIxMjMgTWFpbiBSb2FkIiwgImlu
-      c3RpdHV0ZSI6ICJTb21lIFVuaXZlcnNpdHkiLCAicG9zdGNvZGUiOiAiMzAwMCIsICJjb3VudHJ5
-      IjogIkF1c3RyYWxpYSIsICJjaXR5IjogIk1lbGJvdXJuZSIsICJwaG9uZSI6ICIxMjMtNDU2LTc4
-      OSJ9
+      eyJkZXBhcnRtZW50IjogIkNoZW1pc3RyeSIsICJzdGF0ZSI6ICJWSUMiLCAiZXhwZWN0ZWRDb250
+      YWluZXJzIjogIjEsMiwzLDQsNSw2LDcsOCIsICJpbnN0aXR1dGUiOiAiU29tZSBVbml2ZXJzaXR5
+      IiwgInN0cmVldEFkZHJlc3MiOiAiMTIzIE1haW4gUm9hZCIsICJwaG9uZSI6ICIxMjMtNDU2LTc4
+      OSIsICJjaXR5IjogIk1lbGJvdXJuZSIsICJyZXR1cm5EZXdhciI6IHRydWUsICJlbWFpbCI6ICJq
+      YW5lQGV4YW1wbGUuY29tIiwgImNvdW50cnkiOiAiQXVzdHJhbGlhIiwgImVwbiI6ICIxMjNhIiwg
+      InBvc3Rjb2RlIjogIjMwMDAiLCAiY29udGFpbmVyVHlwZSI6ICJwdWNrcyIsICJvd25lciI6ICJK
+      YW5lIERvZSIsICJjb3VyaWVyQWNjb3VudCI6ICIxMjIzMzMiLCAiY291cmllciI6ICJGYXN0IERl
+      bGl2ZXJpZXMifQ==
     headers:
       Accept: ['*/*']
       Accept-Encoding: ['gzip, deflate']
       Connection: [keep-alive]
-      Content-Length: ['459']
+      Content-Length: ['409']
       Content-Type: [application/json]
       User-Agent: [python-requests/2.9.1]
     method: POST
     uri: http://localhost:8002/dewars/new
   response:
-    body: {string: '{"data":{"__v":0,"containerType":"pucks","epn":"123a","courier":"Fast
-        Deliveries","expectedContainers":"ASP0001,ASP0002,ASP0003,ASP0004 | ASP0006,ASP0007,ASP0008,ASP0009","returnDewar":true,"owner":"Jane
-        Doe","email":"jane@example.com","state":"VIC","department":"Chemistry","courierAccount":"122333","streetAddress":"123
-        Main Road","institute":"Some University","postcode":"3000","country":"Australia","city":"Melbourne","phone":"123-456-789","name":"d-123a-1","_id":"56b1e31bf8c6e39ca2363796"}}'}
+    body: {string: '{"data":{"__v":0,"department":"Chemistry","state":"VIC","expectedContainers":"1,2,3,4,5,6,7,8","institute":"Some
+        University","streetAddress":"123 Main Road","phone":"123-456-789","city":"Melbourne","returnDewar":true,"email":"jane@example.com","country":"Australia","epn":"123a","postcode":"3000","containerType":"pucks","owner":"Jane
+        Doe","courierAccount":"122333","courier":"Fast Deliveries","name":"d-123a-1","_id":"56b5cb44f39f201d8195a8e0"}}'}
     headers:
       Connection: [keep-alive]
-      Content-Length: ['496']
+      Content-Length: ['446']
       Content-Type: [application/json; charset=utf-8]
-      Date: ['Wed, 03 Feb 2016 11:23:07 GMT']
-      ETag: [W/"1f0-djk3vYnvkEj+iFrSwOFddQ"]
+      Date: ['Sat, 06 Feb 2016 10:30:28 GMT']
+      ETag: [W/"1be-0VrOtZpw7jIVf8lI6aG3JA"]
       X-Powered-By: [Express]
     status: {code: 200, message: OK}
 - request:
@@ -40,18 +38,17 @@ interactions:
       Connection: [keep-alive]
       User-Agent: [python-requests/2.9.1]
     method: GET
-    uri: http://localhost:8002/dewars/56b1e31bf8c6e39ca2363796
+    uri: http://localhost:8002/dewars/56b5cb44f39f201d8195a8e0
   response:
-    body: {string: '{"data":{"_id":"56b1e31bf8c6e39ca2363796","containerType":"pucks","epn":"123a","courier":"Fast
-        Deliveries","expectedContainers":"ASP0001,ASP0002,ASP0003,ASP0004 | ASP0006,ASP0007,ASP0008,ASP0009","returnDewar":true,"owner":"Jane
-        Doe","email":"jane@example.com","state":"VIC","department":"Chemistry","courierAccount":"122333","streetAddress":"123
-        Main Road","institute":"Some University","postcode":"3000","country":"Australia","city":"Melbourne","phone":"123-456-789","name":"d-123a-1","__v":0}}'}
+    body: {string: '{"data":{"_id":"56b5cb44f39f201d8195a8e0","department":"Chemistry","state":"VIC","expectedContainers":"1,2,3,4,5,6,7,8","institute":"Some
+        University","streetAddress":"123 Main Road","phone":"123-456-789","city":"Melbourne","returnDewar":true,"email":"jane@example.com","country":"Australia","epn":"123a","postcode":"3000","containerType":"pucks","owner":"Jane
+        Doe","courierAccount":"122333","courier":"Fast Deliveries","name":"d-123a-1","__v":0}}'}
     headers:
       Connection: [keep-alive]
-      Content-Length: ['496']
+      Content-Length: ['446']
       Content-Type: [application/json; charset=utf-8]
-      Date: ['Wed, 03 Feb 2016 11:23:07 GMT']
-      ETag: [W/"1f0-D6ZYqqKIMcUzvWY/X5zQ8w"]
+      Date: ['Sat, 06 Feb 2016 10:30:28 GMT']
+      ETag: [W/"1be-HFXChxikk8j+IyfGSSTwiQ"]
       X-Powered-By: [Express]
     status: {code: 200, message: OK}
 version: 1

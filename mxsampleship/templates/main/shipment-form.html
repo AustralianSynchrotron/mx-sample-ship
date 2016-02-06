@@ -28,7 +28,7 @@
     <div class="form-group">
       {{ form.epn.label(class='control-label col-md-4') }}
       <div class="col-md-5">
-        {{ form.epn( class='form-control', **{'data-bind': 'value: epn'}) }}
+        {{ form.epn(class='form-control', **{'data-bind': 'value: epn'}) }}
       </div>
     </div>
     <div class="form-group" data-bind="visible: shouldShowOtherEpn">
@@ -42,11 +42,40 @@
         <label>{{ form.return_dewar() }}{{ form.return_dewar.label.text }}</label>
       </div>
     </div>
-    {{ fields([
-        'courier', 'courier_account', 'container_type', 'container_ids_1',
-        'container_ids_2',
-      ])
-    }}
+    {{ fields(['courier', 'courier_account']) }}
+    <div class="form-group">
+      {{ form.container_type.label(class='control-label col-md-4') }}
+      <div class="col-md-5">
+        {{ form.container_type(class='form-control',
+                               **{'data-bind': 'value: containerType'}) }}
+      </div>
+    </div>
+    <div id="pucks" class="form-group" data-bind="visible: shouldShowPucks">
+      {{ form.pucks[0].label(class='control-label col-md-4') }}
+      <div class="col-md-5">
+        {% for start in [0, 4] %}
+          <div class="form-group">
+            {% for field in form.pucks[start:start+4] %}
+              <div class="col-md-3">{{ field(class='form-control') }}</div>
+            {% endfor %}
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+    <div id="cassettes" class="form-group" data-bind="visible: shouldShowCassettes">
+      {{ form.cassettes[0].label(class='control-label col-md-4') }}
+      <div class="col-md-5">
+          {% for field in form.cassettes %}
+            <div class="col-md-6">{{ field(class='form-control') }}</div>
+          {% endfor %}
+      </div>
+    </div>
+    <div id="canes" class="form-group" data-bind="visible: shouldShowCanes">
+      {{ form.canes.label(class='control-label col-md-4') }}
+      <div class="col-md-5">
+        {{ form.canes(class='form-control') }}
+      </div>
+    </div>
     <div class="form-group">
       <div class="col-md-offset-4 col-md-5">
         {{ form.submit(class='btn btn-default') }}
@@ -63,6 +92,16 @@ function ShipmentFormViewModel () {
   this.epn = ko.observable()
   this.shouldShowOtherEpn = ko.computed(function () {
     return this.epn() === 'other'
+  }, this)
+  this.containerType = ko.observable()
+  this.shouldShowPucks = ko.computed(function () {
+    return this.containerType() === 'pucks'
+  }, this)
+  this.shouldShowCassettes = ko.computed(function () {
+    return this.containerType() === 'cassettes'
+  }, this)
+  this.shouldShowCanes = ko.computed(function () {
+    return this.containerType() === 'canes'
   }, this)
 }
 ko.applyBindings(new ShipmentFormViewModel())

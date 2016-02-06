@@ -4,7 +4,7 @@ from flask import current_app, render_template, url_for, redirect, abort
 from flask.ext.login import login_required, current_user
 from flask_wtf import Form
 from wtforms import (StringField, PasswordField, SubmitField, BooleanField,
-                     SelectField)
+                     SelectField, FieldList)
 from wtforms.validators import DataRequired
 from portalapi.portalapi import RequestFailed
 import requests
@@ -29,10 +29,11 @@ class ShipmentForm(Form):
     courier_account = StringField('Courier Account Number')
     container_type = SelectField(
         'Sample Type',
-        choices=[('pucks', 'pucks'), ('cassette', 'cassette'), ('canes', 'canes')]
+        choices=[('pucks', 'pucks'), ('cassettes', 'cassettes'), ('canes', 'canes')]
     )
-    container_ids_1 = StringField('ID(s) for adaptor/cassette 1')
-    container_ids_2 = StringField('ID(s) for adaptor/cassette 2')
+    pucks = FieldList(StringField('Puck IDs'), min_entries=8)
+    cassettes = FieldList(StringField('Cassette IDs'), min_entries=2)
+    canes = StringField('Cane ID')
     submit = SubmitField()
 
 
@@ -65,7 +66,11 @@ def shipment_form():
         epn = form.data['epn']
         if epn == 'other':
             epn = form.data['other_epn']
-        containers = '{container_ids_1} | {container_ids_2}'.format(**form.data)
+        container_type = form.data['container_type']
+        if container_type in ('pucks', 'cassettes'):
+            containers = ','.join(form.data[container_type])
+        else:
+            containers = form.data['canes']
         dewar = {
             'epn': epn,
             'owner': form.data['owner'],
@@ -81,7 +86,7 @@ def shipment_form():
             'returnDewar': form.data['return_dewar'],
             'courier': form.data['courier'],
             'courierAccount': form.data['courier_account'],
-            'containerType': form.data['container_type'],
+            'containerType': container_type,
             'expectedContainers': containers,
         }
         url = urljoin(current_app.config['PUCKTRACKER_URL'], 'dewars/new')
@@ -108,5 +113,6 @@ def shipment(shipment_id):
     if response.status_code != 200:
         abort(404)
     dewar = response.json()['data']
+    dewar['expectedContainers'] = dewar['expectedContainers'].strip(',')
     dewar['qrcode_data'] = arrival_data(dewar)
     return render_template('main/shipment-slip.html', dewars=[dewar])
