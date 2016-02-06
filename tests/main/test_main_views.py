@@ -157,3 +157,11 @@ def test_should_display_a_logout_link_when_logged_in(logged_in_client):
 def test_should_not_display_logout_if_not_logged_in(client):
     response = client.get(url_for('auth.login'))
     assert 'Log out' not in response.data.decode('utf-8')
+
+
+def test_displays_errors_if_form_entered_incorrectly(logged_in_client):
+    data_missing_owner = {'owner': ''}
+    response = logged_in_client.post(url_for('main.shipment_form'),
+                                     data=data_missing_owner)
+    page = BeautifulSoup(response.data, 'html.parser')
+    assert 'This field is required.' in page.text
