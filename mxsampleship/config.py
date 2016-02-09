@@ -10,6 +10,7 @@ class TestingConfig(Config):
     TESTING = True
     WTF_CSRF_ENABLED = False
     SERVER_NAME = 'localhost:4999'
+    URL_PREFIX = '/ship-test'
     PUCKTRACKER_URL = 'http://localhost:8002'
     PORTAL_USERNAME = None
     PORTAL_PASSWORD = None
@@ -22,6 +23,7 @@ class FunctionalTestingConfig(TestingConfig):
 
 class DevelopmentConfig(Config):
     DEBUG = True
+    URL_PREFIX = '/ship-dev'
     PUCKTRACKER_URL = os.environ.get('PUCKTRACKER_DEV_URL',
                                      'http://localhost:8000')
     PORTAL_USERNAME = os.environ.get('PORTAL_DEV_USERNAME')
@@ -31,13 +33,14 @@ class DevelopmentConfig(Config):
 
 
 class ProductionConfig(Config):
+    URL_PREFIX = '/ship'
     PUCKTRACKER_URL = os.environ.get('PUCKTRACKER_URL')
     PORTAL_USERNAME = os.environ.get('PORTAL_USERNAME')
     PORTAL_PASSWORD = os.environ.get('PORTAL_PASSWORD')
     PORTAL_URL = 'https://portal.synchrotron.org.au/api/v1'
 
 
-config = {
+config_lookup = {
     'testing': TestingConfig,
     'functional-testing': FunctionalTestingConfig,
     'development': DevelopmentConfig,

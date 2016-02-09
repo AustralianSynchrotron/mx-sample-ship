@@ -28,12 +28,12 @@ def logged_in_client(client):
 
 
 def test_routes_should_have_url_prefix(client):
-    assert urlsplit(url_for('main.index')).path == '/ship/'
+    assert urlsplit(url_for('main.index')).path == '/ship-test/'
 
 
 def test_static_routes_should_have_url_prefix(client):
     url = url_for('static', filename='js/knockout.js')
-    assert urlsplit(url).path == '/ship/static/js/knockout.js'
+    assert urlsplit(url).path == '/ship-test/static/js/knockout.js'
 
 
 def test_shipment_form_redirects_to_login(client):
@@ -163,5 +163,13 @@ def test_displays_errors_if_form_entered_incorrectly(logged_in_client):
     data_missing_owner = {'owner': ''}
     response = logged_in_client.post(url_for('main.shipment_form'),
                                      data=data_missing_owner)
+    page = BeautifulSoup(response.data, 'html.parser')
+    assert 'This field is required.' in page.text
+
+
+def test_email_is_required(logged_in_client):
+    data_missing_email = {'owner': 'Jane'}
+    response = logged_in_client.post(url_for('main.shipment_form'),
+                                     data=data_missing_email)
     page = BeautifulSoup(response.data, 'html.parser')
     assert 'This field is required.' in page.text

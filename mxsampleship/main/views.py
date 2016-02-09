@@ -21,7 +21,7 @@ class ShipmentForm(Form):
     postcode = StringField('Post Code')
     country = StringField('Country')
     phone = StringField('Contact Phone Number')
-    email = StringField('Contact Email')
+    email = StringField('Contact Email', validators=[DataRequired()])
     # epn field must be generated when subclassing the ShipmentForm
     other_epn = StringField('Other EPN')
     return_dewar = BooleanField('Return dewar?')
