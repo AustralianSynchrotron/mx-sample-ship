@@ -1,6 +1,8 @@
 from portalapi.models import Scientist, Visit
 from portalapi.authentication import AuthenticationFailed
+from flask import current_app
 import pytest
+import requests
 from pytz import UTC
 from datetime import datetime, timedelta
 
@@ -38,3 +40,23 @@ def patch_portal_api(monkeypatch):
     monkeypatch.setattr('portalapi.PortalAPI.get_scientist', get_scientist_patch)
     monkeypatch.setattr('portalapi.PortalAPI.get_scientist_visits',
                         get_scientist_visits_patch)
+
+
+@pytest.yield_fixture
+def db():
+    yield PuckTracker()
+
+
+class PuckTracker():
+    @property
+    def actions_url(self):
+        return '%s/actions' % current_app.config['PUCKTRACKER_URL']
+
+    def clear(self):
+        requests.post(self.actions_url, json={'type': 'REMOVE_ALL'})
+
+    def add_dewar(self, dewar):
+        requests.post(self.actions_url, json={
+            'type': 'ADD_DEWAR',
+            'dewar': dewar,
+        })

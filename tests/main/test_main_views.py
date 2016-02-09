@@ -1,6 +1,6 @@
 from mxsampleship import create_app
 from portalapi.portalapi import RequestFailed
-from flask import url_for
+from flask import url_for, current_app
 import pytest
 import responses
 from bs4 import BeautifulSoup
@@ -67,8 +67,9 @@ def test_shipment_form_renders_when_get_visits_endpoint_is_empty(logged_in_clien
 
 @responses.activate
 def test_form_submits(logged_in_client):
-    responses.add(responses.POST, 'http://localhost:8002/dewars/new',
-                  json={'error': None, 'data': {'_id': '1a'}})
+    new_dewar_url = '%s/dewars/new' % current_app.config['PUCKTRACKER_URL']
+    responses.add(responses.POST, new_dewar_url,
+                  json={'error': None, 'data': {'name': 'd-1a-1'}})
     data = {
         'owner': 'Jane',
         'department': 'Chemistry',
@@ -91,7 +92,7 @@ def test_form_submits(logged_in_client):
     }
     response = logged_in_client.post(url_for('main.shipment_form'), data=data)
     assert response.status_code == 302
-    assert response.location == url_for('main.shipment', shipment_id='1a')
+    assert response.location == url_for('main.shipment', dewar_name='d-1a-1')
     dewar = json.loads(responses.calls[0].request.body)
     assert dewar['epn'] == '123a'
     assert dewar['owner'] == 'Jane'
@@ -132,9 +133,10 @@ def test_shipment_view(logged_in_client):
         'containerType': 'pucks',
         'expectedContainers': '1,2,3,4,5,,,',
     }
-    responses.add(responses.GET, 'http://localhost:8002/dewars/1a',
+    responses.add(responses.GET,
+                  '%s/dewars/d-1a-1' % current_app.config['PUCKTRACKER_URL'],
                   json={'error': None, 'data': dewar})
-    response = logged_in_client.get(url_for('main.shipment', shipment_id='1a'))
+    response = logged_in_client.get(url_for('main.shipment', dewar_name='d-1a-1'))
     html = response.data.decode('utf-8')
     assert 'The Dewar ID is: d-123a-1' in html
     assert '123 Main Road' in html

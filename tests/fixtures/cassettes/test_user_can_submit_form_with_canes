@@ -1,12 +1,12 @@
 interactions:
 - request:
     body: !!binary |
-      eyJkZXBhcnRtZW50IjogIiIsICJyZXR1cm5EZXdhciI6IGZhbHNlLCAic3RhdGUiOiAiIiwgImNv
-      dW50cnkiOiAiIiwgInBvc3Rjb2RlIjogIiIsICJwaG9uZSI6ICIxMTEtMjIyLTMzMyIsICJpbnN0
-      aXR1dGUiOiAiU29tZSBVbml2ZXJzaXR5IiwgImV4cGVjdGVkQ29udGFpbmVycyI6ICJzb21lIGdy
-      ZWF0IGNhbmVzIiwgImVtYWlsIjogImphbmVAZXhhbXBsZS5jb20iLCAib3duZXIiOiAiSmFuZSBE
-      b2UiLCAiY291cmllckFjY291bnQiOiAiIiwgImNvbnRhaW5lclR5cGUiOiAiY2FuZXMiLCAiZXBu
-      IjogIjEyM2EiLCAiY2l0eSI6ICIiLCAic3RyZWV0QWRkcmVzcyI6ICIiLCAiY291cmllciI6ICIi
+      eyJlbWFpbCI6ICJqYW5lQGV4YW1wbGUuY29tIiwgInJldHVybkRld2FyIjogZmFsc2UsICJkZXBh
+      cnRtZW50IjogIiIsICJjb3VyaWVyQWNjb3VudCI6ICIiLCAiY29udGFpbmVyVHlwZSI6ICJjYW5l
+      cyIsICJjaXR5IjogIiIsICJzdHJlZXRBZGRyZXNzIjogIiIsICJvd25lciI6ICJKYW5lIERvZSIs
+      ICJjb3VudHJ5IjogIiIsICJlcG4iOiAiMTIzYSIsICJjb3VyaWVyIjogIiIsICJpbnN0aXR1dGUi
+      OiAiU29tZSBVbml2ZXJzaXR5IiwgInN0YXRlIjogIiIsICJwb3N0Y29kZSI6ICIiLCAicGhvbmUi
+      OiAiMTExLTIyMi0zMzMiLCAiZXhwZWN0ZWRDb250YWluZXJzIjogInNvbWUgZ3JlYXQgY2FuZXMi
       fQ==
     headers:
       Accept: ['*/*']
@@ -18,15 +18,15 @@ interactions:
     method: POST
     uri: http://localhost:8002/dewars/new
   response:
-    body: {string: '{"data":{"__v":0,"department":"","returnDewar":false,"state":"","country":"","postcode":"","phone":"111-222-333","institute":"Some
-        University","expectedContainers":"some great canes","email":"jane@example.com","owner":"Jane
-        Doe","courierAccount":"","containerType":"canes","epn":"123a","city":"","streetAddress":"","courier":"","name":"d-123a-3","_id":"56b5ccf3f39f201d8195a8e3"}}'}
+    body: {string: '{"data":{"__v":0,"email":"jane@example.com","returnDewar":false,"department":"","courierAccount":"","containerType":"canes","city":"","streetAddress":"","owner":"Jane
+        Doe","country":"","epn":"123a","courier":"","institute":"Some University","state":"","postcode":"","phone":"111-222-333","expectedContainers":"some
+        great canes","name":"d-123a-3","_id":"56bd28cc13b06eca5aba5902"}}'}
     headers:
       Connection: [keep-alive]
       Content-Length: ['380']
       Content-Type: [application/json; charset=utf-8]
-      Date: ['Sat, 06 Feb 2016 10:37:39 GMT']
-      ETag: [W/"17c-l3If+/TC347vYk2/qChxLQ"]
+      Date: ['Fri, 12 Feb 2016 00:35:24 GMT']
+      ETag: [W/"17c-pjy6llOj5Igf/nmD2n8AXA"]
       X-Powered-By: [Express]
     status: {code: 200, message: OK}
 - request:
@@ -37,17 +37,17 @@ interactions:
       Connection: [keep-alive]
       User-Agent: [python-requests/2.9.1]
     method: GET
-    uri: http://localhost:8002/dewars/56b5ccf3f39f201d8195a8e3
+    uri: http://localhost:8002/dewars/d-123a-3
   response:
-    body: {string: '{"data":{"_id":"56b5ccf3f39f201d8195a8e3","department":"","returnDewar":false,"state":"","country":"","postcode":"","phone":"111-222-333","institute":"Some
-        University","expectedContainers":"some great canes","email":"jane@example.com","owner":"Jane
-        Doe","courierAccount":"","containerType":"canes","epn":"123a","city":"","streetAddress":"","courier":"","name":"d-123a-3","__v":0}}'}
+    body: {string: '{"data":{"_id":"56bd28cc13b06eca5aba5902","email":"jane@example.com","returnDewar":false,"department":"","courierAccount":"","containerType":"canes","city":"","streetAddress":"","owner":"Jane
+        Doe","country":"","epn":"123a","courier":"","institute":"Some University","state":"","postcode":"","phone":"111-222-333","expectedContainers":"some
+        great canes","name":"d-123a-3","__v":0}}'}
     headers:
       Connection: [keep-alive]
       Content-Length: ['380']
       Content-Type: [application/json; charset=utf-8]
-      Date: ['Sat, 06 Feb 2016 10:37:39 GMT']
-      ETag: [W/"17c-dTvKBYd3Q7CX7fUkvokJOw"]
+      Date: ['Fri, 12 Feb 2016 00:35:24 GMT']
+      ETag: [W/"17c-7saYKGmgcb0eKndGl/dOtw"]
       X-Powered-By: [Express]
     status: {code: 200, message: OK}
 version: 1

@@ -4,6 +4,7 @@ import pytest
 from vcr import VCR
 from threading import Thread
 import os
+import requests
 
 
 pytestmark = pytest.mark.skipif('DISPLAY' not in os.environ,
@@ -35,7 +36,8 @@ def app():
 
 
 @vcr.use_cassette()
-def test_user_can_submit_form(logged_in_browser):
+def test_user_can_submit_form(logged_in_browser, db):
+    db.clear()
     browser = logged_in_browser
     assert browser.url == url_for('main.shipment_form')
     browser.fill('owner', 'Jane Doe')

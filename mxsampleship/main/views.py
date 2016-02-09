@@ -92,8 +92,8 @@ def shipment_form():
         url = urljoin(current_app.config['PUCKTRACKER_URL'], 'dewars/new')
         response = requests.post(url, json=dewar)
         # TODO: Handle errors
-        shipment_id = response.json()['data']['_id']
-        return redirect(url_for('.shipment', shipment_id=shipment_id))
+        name = response.json()['data']['name']
+        return redirect(url_for('.shipment', dewar_name=name))
     scientist = current_user.api.get_scientist()
     full_name = '{user.first_names} {user.last_name}'.format(user=scientist)
     form.owner.data = full_name
@@ -103,16 +103,18 @@ def shipment_form():
     return render_template('main/shipment-form.html', form=form)
 
 
-@main.route('/shipment/<shipment_id>')
+@main.route('/shipment/<dewar_name>')
 @login_required
-def shipment(shipment_id):
-    endpoint = 'dewars/%s' % shipment_id
+def shipment(dewar_name):
+    endpoint = 'dewars/%s' % dewar_name
     url = urljoin(current_app.config['PUCKTRACKER_URL'], endpoint)
     response = requests.get(url)
     # TODO: Handle errors
     if response.status_code != 200:
         abort(404)
-    dewar = response.json()['data']
+    dewar = response.json().get('data', {})
+    if not dewar:  # TODO: Check submitter
+        abort(403)
     dewar['expectedContainers'] = dewar['expectedContainers'].strip(',')
     dewar['qrcode_data'] = arrival_data(dewar)
     return render_template('main/shipment-slip.html', dewars=[dewar])

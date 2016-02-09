@@ -25,7 +25,7 @@ class DevelopmentConfig(Config):
     DEBUG = True
     URL_PREFIX = '/ship-dev'
     PUCKTRACKER_URL = os.environ.get('PUCKTRACKER_DEV_URL',
-                                     'http://localhost:8000')
+                                     'http://localhost:8001')
     PORTAL_USERNAME = os.environ.get('PORTAL_DEV_USERNAME')
     PORTAL_PASSWORD = os.environ.get('PORTAL_DEV_PASSWORD')
     PORTAL_URL = os.environ.get('PORTAL_DEV_URL',
