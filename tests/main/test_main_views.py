@@ -175,3 +175,12 @@ def test_email_is_required(logged_in_client):
                                      data=data_missing_email)
     page = BeautifulSoup(response.data, 'html.parser')
     assert 'This field is required.' in page.text
+
+
+def test_submitted_data_should_not_be_overwitten(logged_in_client):
+    data_with_invalid_email = {'owner': 'John', 'email': 'invalid-email'}
+    response = logged_in_client.post(url_for('main.shipment_form'),
+                                     data=data_with_invalid_email)
+    page = BeautifulSoup(response.data, 'html.parser')
+    assert page.find(attrs={'name': 'owner'})['value'] == 'John'
+    assert page.find(attrs={'name': 'email'})['value'] == 'invalid-email'

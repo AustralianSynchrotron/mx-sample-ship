@@ -1,6 +1,6 @@
 from . import main
 from ..utils import arrival_data
-from flask import current_app, render_template, url_for, redirect, abort
+from flask import current_app, request, render_template, url_for, redirect, abort
 from flask.ext.login import login_required, current_user
 from flask_wtf import Form
 from wtforms import (StringField, PasswordField, SubmitField, BooleanField,
@@ -94,12 +94,15 @@ def shipment_form():
         # TODO: Handle errors
         name = response.json()['data']['name']
         return redirect(url_for('.shipment', dewar_name=name))
-    scientist = current_user.api.get_scientist()
-    full_name = '{user.first_names} {user.last_name}'.format(user=scientist)
-    form.owner.data = full_name
-    form.institute.data = scientist.organisation.name_long
-    form.email.data = scientist.email
-    form.phone.data = scientist.telephone_number_1
+
+    if request.method == 'GET':
+        scientist = current_user.api.get_scientist()
+        full_name = '{user.first_names} {user.last_name}'.format(user=scientist)
+        form.owner.data = full_name
+        form.institute.data = scientist.organisation.name_long
+        form.email.data = scientist.email
+        form.phone.data = scientist.telephone_number_1
+
     return render_template('main/shipment-form.html', form=form)
 
 
