@@ -7,9 +7,12 @@ from flask_wtf import Form
 from wtforms import (StringField, PasswordField, SubmitField, BooleanField,
                      SelectField, FieldList)
 from wtforms.validators import DataRequired, Email
+from portalapi import PortalAPI, Authentication
 from portalapi.portalapi import RequestFailed
 import requests
 from six.moves.urllib.parse import urljoin
+from datetime import datetime
+from pytz import UTC
 
 
 class ShipmentForm(Form):
@@ -74,6 +77,12 @@ def shipment_form():
         epn = form.data['epn']
         if epn == 'other':
             epn = form.data['other_epn']
+            visit = get_visit(epn)
+        else:
+            visit = next(visit for visit in visits if visit.epn == epn)
+        if visit is None:
+            form.other_epn.errors.append('Invalid EPN')
+            return render_template('main/shipment-form.html', form=form)
         container_type = form.data['container_type']
         if container_type in ('pucks', 'other-pucks'):
             containers = ' | '.join(form.data['pucks'])
@@ -98,6 +107,9 @@ def shipment_form():
             'courierAccount': form.data['courier_account'],
             'containerType': container_type,
             'expectedContainers': containers,
+            'addedTime': UTC.localize(datetime.utcnow()).isoformat(),
+            'experimentStartTime': visit.start_time.isoformat(),
+            'experimentEndTime': visit.end_time.isoformat(),
         }
         url = urljoin(current_app.config['PUCKTRACKER_URL'], 'dewars/new')
         response = requests.post(url, json=dewar)
@@ -134,3 +146,16 @@ def shipment(dewar_name):
         abort(403)
     dewar['qrcode_data'] = arrival_data(dewar)
     return render_template('main/shipment-slip.html', dewars=[dewar])
+
+
+def get_visit(epn):
+    api_username = current_app.config['PORTAL_USERNAME']
+    api_password = current_app.config['PORTAL_PASSWORD']
+    api_url = current_app.config['PORTAL_URL']
+    auth = Authentication(api_username, api_password, api_url)
+    auth.login()
+    api = PortalAPI(auth)
+    try:
+        return api.get_visit(epn, is_epn=True)
+    except RequestFailed:
+        return None

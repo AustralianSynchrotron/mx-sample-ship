@@ -7,6 +7,7 @@ from bs4 import BeautifulSoup
 from six import string_types
 from six.moves.urllib.parse import urlsplit
 import json
+from freezegun import freeze_time
 
 
 LOGIN_DATA = {'username': 'jane', 'password': 'secret'}
@@ -66,6 +67,7 @@ def test_shipment_form_renders_when_get_visits_endpoint_is_empty(logged_in_clien
 
 
 @responses.activate
+@freeze_time('2016-01-02 03:04:05')
 def test_form_submits(logged_in_client):
     new_dewar_url = '%s/dewars/new' % current_app.config['PUCKTRACKER_URL']
     responses.add(responses.POST, new_dewar_url,
@@ -110,6 +112,41 @@ def test_form_submits(logged_in_client):
     assert dewar['courierAccount'] == '999'
     assert dewar['containerType'] == 'pucks'
     assert dewar['expectedContainers'] == '1 | 2 | 3 |  |  |  |  | '
+    assert dewar['addedTime'] == '2016-01-02T03:04:05+00:00'
+    assert dewar['experimentStartTime'] == '2016-04-29T08:00:00+10:00'
+    assert dewar['experimentEndTime'] == '2016-04-29T16:00:00+10:00'
+
+
+@responses.activate
+def test_form_submits_for_other_epn(logged_in_client):
+    new_dewar_url = '%s/dewars/new' % current_app.config['PUCKTRACKER_URL']
+    responses.add(responses.POST, new_dewar_url,
+                  json={'error': None, 'data': {'name': 'd-valid-epn-1'}})
+    data = {
+        'owner': 'Jane',
+        'email': 'jane@example.com',
+        'epn': 'other',
+        'other_epn': 'valid-epn',
+        'container_type': 'pucks',
+    }
+    response = logged_in_client.post(url_for('main.shipment_form'), data=data)
+    dewar = json.loads(responses.calls[0].request.body)
+    assert dewar['epn'] == 'valid-epn'
+    assert dewar['experimentStartTime'] == '2016-01-02T08:00:00+10:00'
+    assert dewar['experimentEndTime'] == '2016-01-03T08:00:00+10:00'
+
+
+def test_form_does_not_submit_if_epn_is_invalid(logged_in_client):
+    data = {
+        'owner': 'Jane',
+        'email': 'jane@example.com',
+        'epn': 'other',
+        'other_epn': 'invalid-epn',
+        'container_type': 'pucks',
+    }
+    response = logged_in_client.post(url_for('main.shipment_form'), data=data)
+    page = BeautifulSoup(response.data, 'html.parser')
+    assert 'Invalid EPN' in page.find(id='other_epn-field').text
 
 
 @responses.activate

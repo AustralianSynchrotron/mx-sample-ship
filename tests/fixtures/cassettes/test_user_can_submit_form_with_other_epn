@@ -1,30 +1,35 @@
 interactions:
 - request:
     body: !!binary |
-      eyJlbWFpbCI6ICJqYW5lQGV4YW1wbGUuY29tIiwgInJldHVybkRld2FyIjogZmFsc2UsICJkZXBh
-      cnRtZW50IjogIiIsICJjb3VyaWVyQWNjb3VudCI6ICIiLCAiY29udGFpbmVyVHlwZSI6ICJwdWNr
-      cyIsICJjaXR5IjogIiIsICJzdHJlZXRBZGRyZXNzIjogIiIsICJvd25lciI6ICJKYW5lIERvZSIs
-      ICJjb3VudHJ5IjogIiIsICJlcG4iOiAibXktZXBuIiwgImNvdXJpZXIiOiAiIiwgImluc3RpdHV0
-      ZSI6ICJTb21lIFVuaXZlcnNpdHkiLCAic3RhdGUiOiAiIiwgInBvc3Rjb2RlIjogIiIsICJwaG9u
-      ZSI6ICIxMTEtMjIyLTMzMyIsICJleHBlY3RlZENvbnRhaW5lcnMiOiAiLCwsLCwsLCJ9
+      eyJzdGF0ZSI6ICIiLCAicGhvbmUiOiAiMTExLTIyMi0zMzMiLCAiZXhwZXJpbWVudEVuZFRpbWUi
+      OiAiMjAxNi0wMS0wM1QwODowMDowMCsxMDowMCIsICJvd25lciI6ICJKYW5lIERvZSIsICJyZXR1
+      cm5EZXdhciI6IGZhbHNlLCAiY291cmllckFjY291bnQiOiAiIiwgImFkZGVkVGltZSI6ICIyMDE2
+      LTAyLTE2VDEyOjQwOjU1LjE0NTgyMiswMDowMCIsICJlbWFpbCI6ICJqYW5lQGV4YW1wbGUuY29t
+      IiwgInBvc3Rjb2RlIjogIiIsICJpbnN0aXR1dGUiOiAiU29tZSBVbml2ZXJzaXR5IiwgImNvdW50
+      cnkiOiAiIiwgImRlcGFydG1lbnQiOiAiIiwgImNvbnRhaW5lclR5cGUiOiAicHVja3MiLCAiZXhw
+      ZWN0ZWRDb250YWluZXJzIjogIiB8ICB8ICB8ICB8ICB8ICB8ICB8ICIsICJjaXR5IjogIiIsICJj
+      b3VyaWVyIjogIiIsICJleHBlcmltZW50U3RhcnRUaW1lIjogIjIwMTYtMDEtMDJUMDg6MDA6MDAr
+      MTA6MDAiLCAiZXBuIjogInZhbGlkLWVwbiIsICJzdHJlZXRBZGRyZXNzIjogIiJ9
     headers:
       Accept: ['*/*']
       Accept-Encoding: ['gzip, deflate']
       Connection: [keep-alive]
-      Content-Length: ['336']
+      Content-Length: ['504']
       Content-Type: [application/json]
       User-Agent: [python-requests/2.9.1]
     method: POST
     uri: http://localhost:8002/dewars/new
   response:
-    body: {string: '{"data":{"__v":0,"email":"jane@example.com","returnDewar":false,"department":"","courierAccount":"","containerType":"pucks","city":"","streetAddress":"","owner":"Jane
-        Doe","country":"","epn":"my-epn","courier":"","institute":"Some University","state":"","postcode":"","phone":"111-222-333","expectedContainers":",,,,,,,","name":"d-my-epn-1","_id":"56bd28c913b06eca5aba5900"}}'}
+    body: {string: '{"data":{"__v":0,"state":"","phone":"111-222-333","experimentEndTime":"2016-01-02T22:00:00.000Z","owner":"Jane
+        Doe","returnDewar":false,"courierAccount":"","addedTime":"2016-02-16T12:40:55.145Z","email":"jane@example.com","postcode":"","institute":"Some
+        University","country":"","department":"","containerType":"pucks","expectedContainers":"
+        |  |  |  |  |  |  | ","city":"","courier":"","experimentStartTime":"2016-01-01T22:00:00.000Z","epn":"valid-epn","streetAddress":"","name":"d-valid-epn-1","_id":"56c318d711bd1bb4d0badc98"}}'}
     headers:
       Connection: [keep-alive]
-      Content-Length: ['375']
+      Content-Length: ['530']
       Content-Type: [application/json; charset=utf-8]
-      Date: ['Fri, 12 Feb 2016 00:35:21 GMT']
-      ETag: [W/"177-wS7fpGYPSvDp6CagViTpZQ"]
+      Date: ['Tue, 16 Feb 2016 12:40:55 GMT']
+      ETag: [W/"212-vhWquadl2ea23fDwodZvbw"]
       X-Powered-By: [Express]
     status: {code: 200, message: OK}
 - request:
@@ -35,16 +40,18 @@ interactions:
       Connection: [keep-alive]
       User-Agent: [python-requests/2.9.1]
     method: GET
-    uri: http://localhost:8002/dewars/d-my-epn-1
+    uri: http://localhost:8002/dewars/d-valid-epn-1
   response:
-    body: {string: '{"data":{"_id":"56bd28c913b06eca5aba5900","email":"jane@example.com","returnDewar":false,"department":"","courierAccount":"","containerType":"pucks","city":"","streetAddress":"","owner":"Jane
-        Doe","country":"","epn":"my-epn","courier":"","institute":"Some University","state":"","postcode":"","phone":"111-222-333","expectedContainers":",,,,,,,","name":"d-my-epn-1","__v":0}}'}
+    body: {string: '{"data":{"_id":"56c318d711bd1bb4d0badc98","state":"","phone":"111-222-333","experimentEndTime":"2016-01-02T22:00:00.000Z","owner":"Jane
+        Doe","returnDewar":false,"courierAccount":"","addedTime":"2016-02-16T12:40:55.145Z","email":"jane@example.com","postcode":"","institute":"Some
+        University","country":"","department":"","containerType":"pucks","expectedContainers":"
+        |  |  |  |  |  |  | ","city":"","courier":"","experimentStartTime":"2016-01-01T22:00:00.000Z","epn":"valid-epn","streetAddress":"","name":"d-valid-epn-1","__v":0}}'}
     headers:
       Connection: [keep-alive]
-      Content-Length: ['375']
+      Content-Length: ['530']
       Content-Type: [application/json; charset=utf-8]
-      Date: ['Fri, 12 Feb 2016 00:35:21 GMT']
-      ETag: [W/"177-t0LSmCR4cXwhcBwXHVqFhg"]
+      Date: ['Tue, 16 Feb 2016 12:40:55 GMT']
+      ETag: [W/"212-aPGAq4kvc5jDEZAwyz6jjQ"]
       X-Powered-By: [Express]
     status: {code: 200, message: OK}
 version: 1

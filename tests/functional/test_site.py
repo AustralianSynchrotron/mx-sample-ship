@@ -84,10 +84,10 @@ def test_user_can_submit_form_with_other_epn(logged_in_browser):
     assert browser.find_by_name('other_epn').visible == False
     browser.select('epn', 'other')
     assert browser.find_by_name('other_epn').visible == True
-    browser.fill('other_epn', 'my-epn')
+    browser.fill('other_epn', 'valid-epn')
     browser.select('container_type', 'pucks')
     browser.find_by_name('submit').first.click()
-    assert browser.is_text_present('Samples related to experiment: my-epn')
+    assert browser.is_text_present('Samples related to experiment: valid-epn')
 
 
 def test_shows_correct_fields_for_each_container_type(logged_in_browser):

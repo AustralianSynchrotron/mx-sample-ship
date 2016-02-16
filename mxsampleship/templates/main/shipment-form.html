@@ -40,7 +40,8 @@
       ])
     }}
     {{ with_errors(form.epn, **{'data-bind': 'value: epn'}) }}
-    <div class="form-group" data-bind="visible: shouldShowOtherEpn">
+    <div class="form-group" id="other_epn-field"
+         data-bind="visible: shouldShowOtherEpn">
       {{ form.other_epn.label(class='control-label col-md-4') }}
       <div class="col-md-5">
         {{ form.other_epn(class='form-control',
