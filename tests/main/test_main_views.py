@@ -109,7 +109,61 @@ def test_form_submits(logged_in_client):
     assert dewar['courier'] == 'Fast Deliveries'
     assert dewar['courierAccount'] == '999'
     assert dewar['containerType'] == 'pucks'
-    assert dewar['expectedContainers'] == '1,2,3,,,,,'
+    assert dewar['expectedContainers'] == '1 | 2 | 3 |  |  |  |  | '
+
+
+@responses.activate
+def test_form_submits_other_pucks(logged_in_client):
+    new_dewar_url = '%s/dewars/new' % current_app.config['PUCKTRACKER_URL']
+    responses.add(responses.POST, new_dewar_url,
+                  json={'error': None, 'data': {'name': 'd-1a-1'}})
+    data = {
+        'owner': 'Jane',
+        'email': 'jane@example.com',
+        'epn': '123a',
+        'container_type': 'other-pucks',
+        'pucks-0': 'o1',
+        'pucks-1': 'o2',
+        'pucks-2': 'o3',
+    }
+    response = logged_in_client.post(url_for('main.shipment_form'), data=data)
+    dewar = json.loads(responses.calls[0].request.body)
+    assert dewar['expectedContainers'] == 'o1 | o2 | o3 |  |  |  |  | '
+
+
+@responses.activate
+def test_form_submits_cassettes(logged_in_client):
+    new_dewar_url = '%s/dewars/new' % current_app.config['PUCKTRACKER_URL']
+    responses.add(responses.POST, new_dewar_url,
+                  json={'error': None, 'data': {'name': 'd-1a-1'}})
+    data = {
+        'owner': 'Jane',
+        'email': 'jane@example.com',
+        'epn': '123a',
+        'container_type': 'cassettes',
+        'cassettes-0': 'c1',
+        'cassettes-1': 'c2',
+    }
+    response = logged_in_client.post(url_for('main.shipment_form'), data=data)
+    dewar = json.loads(responses.calls[0].request.body)
+    assert dewar['expectedContainers'] == 'c1 | c2'
+
+
+@responses.activate
+def test_form_submits_canes(logged_in_client):
+    new_dewar_url = '%s/dewars/new' % current_app.config['PUCKTRACKER_URL']
+    responses.add(responses.POST, new_dewar_url,
+                  json={'error': None, 'data': {'name': 'd-1a-1'}})
+    data = {
+        'owner': 'Jane',
+        'email': 'jane@example.com',
+        'epn': '123a',
+        'container_type': 'canes',
+        'canes': 'the-canes',
+    }
+    response = logged_in_client.post(url_for('main.shipment_form'), data=data)
+    dewar = json.loads(responses.calls[0].request.body)
+    assert dewar['expectedContainers'] == 'the-canes'
 
 
 @responses.activate
@@ -131,7 +185,7 @@ def test_shipment_view(logged_in_client):
         'courier': 'Fast Deliveries',
         'courierAccount': '999',
         'containerType': 'pucks',
-        'expectedContainers': '1,2,3,4,5,,,',
+        'expectedContainers': '1 | 2 | 3 | 4 | 5 |  |  | ',
     }
     responses.add(responses.GET,
                   '%s/dewars/d-1a-1' % current_app.config['PUCKTRACKER_URL'],
@@ -140,7 +194,7 @@ def test_shipment_view(logged_in_client):
     html = response.data.decode('utf-8')
     assert 'The Dewar ID is: d-123a-1' in html
     assert '123 Main Road' in html
-    assert '1,2,3,4,5' in html
+    assert  '1 | 2 | 3 | 4 | 5 |  |  | ' in html
 
 
 def test_directed_to_login_if_token_invalid(logged_in_client, monkeypatch):
@@ -166,15 +220,24 @@ def test_displays_errors_if_form_entered_incorrectly(logged_in_client):
     response = logged_in_client.post(url_for('main.shipment_form'),
                                      data=data_missing_owner)
     page = BeautifulSoup(response.data, 'html.parser')
-    assert 'This field is required.' in page.text
+    assert 'This field is required.' in page.find(id='owner-field').text
 
 
-def test_email_is_required(logged_in_client):
-    data_missing_email = {'owner': 'Jane'}
+def test_valid_email_is_required(logged_in_client):
+    data_with_invalid_email = {'email': 'invalid-email'}
     response = logged_in_client.post(url_for('main.shipment_form'),
-                                     data=data_missing_email)
+                                     data=data_with_invalid_email)
     page = BeautifulSoup(response.data, 'html.parser')
-    assert 'This field is required.' in page.text
+    assert 'Invalid email address' in page.find(id='email-field').text
+
+
+def test_container_type_is_required(logged_in_client):
+    data_missing_container_type = {'container_type': ''}
+    response = logged_in_client.post(url_for('main.shipment_form'),
+                                     data=data_missing_container_type)
+    page = BeautifulSoup(response.data, 'html.parser')
+    assert 'This field is required.' in page.find(id='container_type-field').text
+
 
 
 def test_submitted_data_should_not_be_overwitten(logged_in_client):
@@ -189,7 +252,8 @@ def test_submitted_data_should_not_be_overwitten(logged_in_client):
 @responses.activate
 def test_dewar_tracker_errors_should_be_flashed(logged_in_client):
     new_dewar_url = '%s/dewars/new' % current_app.config['PUCKTRACKER_URL']
-    responses.add(responses.POST, new_dewar_url, json={'error': 'Pucktracker error'})
+    responses.add(responses.POST, new_dewar_url,
+                  json={'error': 'Pucktracker error'})
     data = {
         'owner': 'Jane',
         'email': 'jane@example.com',

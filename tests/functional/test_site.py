@@ -85,13 +85,22 @@ def test_user_can_submit_form_with_other_epn(logged_in_browser):
     browser.select('epn', 'other')
     assert browser.find_by_name('other_epn').visible == True
     browser.fill('other_epn', 'my-epn')
+    browser.select('container_type', 'pucks')
     browser.find_by_name('submit').first.click()
     assert browser.is_text_present('Samples related to experiment: my-epn')
 
 
 def test_shows_correct_fields_for_each_container_type(logged_in_browser):
     browser = logged_in_browser
+    browser.select('container_type', '')
+    assert browser.find_by_id('pucks').visible == False
+    assert browser.find_by_id('cassettes').visible == False
+    assert browser.find_by_id('canes').visible == False
     browser.select('container_type', 'pucks')
+    assert browser.find_by_id('pucks').visible == True
+    assert browser.find_by_id('cassettes').visible == False
+    assert browser.find_by_id('canes').visible == False
+    browser.select('container_type', 'other-pucks')
     assert browser.find_by_id('pucks').visible == True
     assert browser.find_by_id('cassettes').visible == False
     assert browser.find_by_id('canes').visible == False
@@ -124,4 +133,3 @@ def test_user_can_submit_form_with_canes(logged_in_browser):
     browser.fill('canes', 'some great canes')
     browser.find_by_name('submit').first.click()
     assert 'some great canes' in browser.find_by_id('containers').text
-

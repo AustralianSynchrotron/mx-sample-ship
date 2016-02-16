@@ -6,7 +6,7 @@ from flask.ext.login import login_required, current_user
 from flask_wtf import Form
 from wtforms import (StringField, PasswordField, SubmitField, BooleanField,
                      SelectField, FieldList)
-from wtforms.validators import DataRequired
+from wtforms.validators import DataRequired, Email
 from portalapi.portalapi import RequestFailed
 import requests
 from six.moves.urllib.parse import urljoin
@@ -22,7 +22,7 @@ class ShipmentForm(Form):
     postcode = StringField('Post Code')
     country = StringField('Country')
     phone = StringField('Contact Phone Number')
-    email = StringField('Contact Email', validators=[DataRequired()])
+    email = StringField('Contact Email', validators=[Email()])
     # epn field must be generated when subclassing the ShipmentForm
     other_epn = StringField('Other EPN', description='Eg: 1234a')
     return_dewar = BooleanField('Return dewar?')
@@ -30,7 +30,14 @@ class ShipmentForm(Form):
     courier_account = StringField('Courier Account Number')
     container_type = SelectField(
         'Sample Type',
-        choices=[('pucks', 'pucks'), ('cassettes', 'cassettes'), ('canes', 'canes')]
+        choices=[
+            ('', 'Sample container type'),
+            ('pucks', 'Australian Synchrotron Pucks'),
+            ('other-pucks', 'International Pucks'),
+            ('cassettes', 'Cassettes'),
+            ('canes', 'Canes')
+        ],
+        validators=[DataRequired()]
     )
     pucks = FieldList(StringField('Puck IDs'), min_entries=8)
     cassettes = FieldList(StringField('Cassette IDs'), min_entries=2)
@@ -68,8 +75,10 @@ def shipment_form():
         if epn == 'other':
             epn = form.data['other_epn']
         container_type = form.data['container_type']
-        if container_type in ('pucks', 'cassettes'):
-            containers = ','.join(form.data[container_type])
+        if container_type in ('pucks', 'other-pucks'):
+            containers = ' | '.join(form.data['pucks'])
+        elif container_type == 'cassettes':
+            containers = ' | '.join(form.data['cassettes'])
         else:
             containers = form.data['canes']
         dewar = {
@@ -123,6 +132,5 @@ def shipment(dewar_name):
     dewar = response.json().get('data', {})
     if not dewar:  # TODO: Check submitter
         abort(403)
-    dewar['expectedContainers'] = dewar['expectedContainers'].strip(',')
     dewar['qrcode_data'] = arrival_data(dewar)
     return render_template('main/shipment-slip.html', dewars=[dewar])
