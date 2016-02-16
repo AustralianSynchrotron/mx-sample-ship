@@ -184,3 +184,17 @@ def test_submitted_data_should_not_be_overwitten(logged_in_client):
     page = BeautifulSoup(response.data, 'html.parser')
     assert page.find(attrs={'name': 'owner'})['value'] == 'John'
     assert page.find(attrs={'name': 'email'})['value'] == 'invalid-email'
+
+
+@responses.activate
+def test_dewar_tracker_errors_should_be_flashed(logged_in_client):
+    new_dewar_url = '%s/dewars/new' % current_app.config['PUCKTRACKER_URL']
+    responses.add(responses.POST, new_dewar_url, json={'error': 'Pucktracker error'})
+    data = {
+        'owner': 'Jane',
+        'email': 'jane@example.com',
+        'epn': '123a',
+        'container_type': 'pucks',
+    }
+    response = logged_in_client.post(url_for('main.shipment_form'), data=data)
+    assert 'Pucktracker error' in response.data.decode('utf-8')

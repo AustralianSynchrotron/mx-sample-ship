@@ -1,6 +1,7 @@
 from . import main
 from ..utils import arrival_data
-from flask import current_app, request, render_template, url_for, redirect, abort
+from flask import (current_app, request, render_template, url_for, redirect,
+                   abort, flash)
 from flask.ext.login import login_required, current_user
 from flask_wtf import Form
 from wtforms import (StringField, PasswordField, SubmitField, BooleanField,
@@ -23,7 +24,7 @@ class ShipmentForm(Form):
     phone = StringField('Contact Phone Number')
     email = StringField('Contact Email', validators=[DataRequired()])
     # epn field must be generated when subclassing the ShipmentForm
-    other_epn = StringField('Other EPN')
+    other_epn = StringField('Other EPN', description='Eg: 1234a')
     return_dewar = BooleanField('Return dewar?')
     courier = StringField('Courier')
     courier_account = StringField('Courier Account Number')
@@ -91,9 +92,13 @@ def shipment_form():
         }
         url = urljoin(current_app.config['PUCKTRACKER_URL'], 'dewars/new')
         response = requests.post(url, json=dewar)
-        # TODO: Handle errors
-        name = response.json()['data']['name']
-        return redirect(url_for('.shipment', dewar_name=name))
+        response_data = response.json()
+        error = response_data.get('error')
+        if error:
+            flash(error, 'danger')
+        else:
+            name = response.json()['data']['name']
+            return redirect(url_for('.shipment', dewar_name=name))
 
     if request.method == 'GET':
         scientist = current_user.api.get_scientist()

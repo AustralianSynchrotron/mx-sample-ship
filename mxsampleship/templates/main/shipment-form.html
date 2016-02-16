@@ -43,7 +43,8 @@
     <div class="form-group" data-bind="visible: shouldShowOtherEpn">
       {{ form.other_epn.label(class='control-label col-md-4') }}
       <div class="col-md-5">
-        {{ form.other_epn(class='form-control') }}
+        {{ form.other_epn(class='form-control',
+                          placeholder=form.other_epn.description) }}
       </div>
       {{ errors(form.other_epn) }}
     </div>
