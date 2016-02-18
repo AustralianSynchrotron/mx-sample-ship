@@ -269,11 +269,12 @@ def test_valid_email_is_required(logged_in_client):
 
 
 def test_container_type_is_required(logged_in_client):
-    data_missing_container_type = {'container_type': ''}
+    data_missing_container_type = {'container_type': 'select'}
     response = logged_in_client.post(url_for('main.shipment_form'),
                                      data=data_missing_container_type)
     page = BeautifulSoup(response.data, 'html.parser')
-    assert 'This field is required.' in page.find(id='container_type-field').text
+    container_type_text = page.find(id='container_type-field').text
+    assert 'Container type is required.' in container_type_text
 
 
 

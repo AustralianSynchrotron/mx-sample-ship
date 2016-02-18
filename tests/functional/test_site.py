@@ -1,6 +1,7 @@
 from mxsampleship import create_app
 from flask import url_for
 import pytest
+from selenium.webdriver.support.select import Select
 from vcr import VCR
 from threading import Thread
 import os
@@ -92,7 +93,7 @@ def test_user_can_submit_form_with_other_epn(logged_in_browser):
 
 def test_shows_correct_fields_for_each_container_type(logged_in_browser):
     browser = logged_in_browser
-    browser.select('container_type', '')
+    browser.select('container_type', 'select')
     assert browser.find_by_id('pucks').visible == False
     assert browser.find_by_id('cassettes').visible == False
     assert browser.find_by_id('canes').visible == False
@@ -133,3 +134,13 @@ def test_user_can_submit_form_with_canes(logged_in_browser):
     browser.fill('canes', 'some great canes')
     browser.find_by_name('submit').first.click()
     assert 'some great canes' in browser.find_by_id('containers').text
+
+
+@vcr.use_cassette()
+def test_invalid_submission_preserves_container_type(logged_in_browser):
+    browser = logged_in_browser
+    browser.fill('owner', '')
+    browser.select('container_type', 'pucks')
+    browser.find_by_name('submit').click()
+    select = Select(browser.driver.find_element_by_id('container_type'))
+    assert select.first_selected_option.get_attribute('value') == 'pucks'

@@ -6,7 +6,7 @@ from flask.ext.login import login_required, current_user
 from flask_wtf import Form
 from wtforms import (StringField, PasswordField, SubmitField, BooleanField,
                      SelectField, FieldList)
-from wtforms.validators import DataRequired, Email
+from wtforms.validators import Required, Email, ValidationError
 from portalapi import PortalAPI, Authentication
 from portalapi.portalapi import RequestFailed
 import requests
@@ -16,7 +16,7 @@ from pytz import UTC
 
 
 class ShipmentForm(Form):
-    owner = StringField('Full Name', validators=[DataRequired()])
+    owner = StringField('Full Name', validators=[Required()])
     department = StringField('Department')
     institute = StringField('Institute')
     street_address = StringField('Street Address')
@@ -34,18 +34,22 @@ class ShipmentForm(Form):
     container_type = SelectField(
         'Sample Type',
         choices=[
-            ('', 'Sample container type'),
+            ('select', 'Sample container type'),
             ('pucks', 'Australian Synchrotron Pucks'),
             ('other-pucks', 'International Pucks'),
             ('cassettes', 'Cassettes'),
             ('canes', 'Canes')
         ],
-        validators=[DataRequired()]
+        validators=[Required()]
     )
     pucks = FieldList(StringField('Puck IDs'), min_entries=8)
     cassettes = FieldList(StringField('Cassette IDs'), min_entries=2)
     canes = StringField('Cane ID')
     submit = SubmitField()
+
+    def validate_container_type(form, field):
+        if field.data == 'select':
+            raise ValidationError('Container type is required.')
 
 
 @main.route('/')
