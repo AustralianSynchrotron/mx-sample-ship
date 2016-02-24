@@ -7,7 +7,6 @@ from bs4 import BeautifulSoup
 from six import string_types
 from six.moves.urllib.parse import urlsplit
 import json
-from freezegun import freeze_time
 
 
 LOGIN_DATA = {'username': 'jane', 'password': 'secret'}
@@ -53,9 +52,16 @@ def test_shipment_form_renders_after_login(logged_in_client):
     assert epn_option['value'] == '123a'
 
 
+def test_shipment_form_shows_epns_outside_of_a_one_day_window(logged_in_client):
+    response = logged_in_client.get(url_for('main.shipment_form'))
+    page = BeautifulSoup(response.data, 'html.parser')
+    epns = [option.text for option in page.find_all('option')]
+    assert '456b @ 2016-06-01 08:00' in epns
+
+
 def test_shipment_form_renders_when_get_visits_endpoint_is_empty(logged_in_client,
                                                                  monkeypatch):
-    def get_scientist_visits_patch(api):
+    def get_scientist_visits_patch(api, **_):
         raise RequestFailed()
     monkeypatch.setattr('portalapi.PortalAPI.get_scientist_visits',
                         get_scientist_visits_patch)
@@ -67,7 +73,6 @@ def test_shipment_form_renders_when_get_visits_endpoint_is_empty(logged_in_clien
 
 
 @responses.activate
-@freeze_time('2016-01-02 03:04:05')
 def test_form_submits(logged_in_client):
     new_dewar_url = '%s/dewars/new' % current_app.config['PUCKTRACKER_URL']
     responses.add(responses.POST, new_dewar_url,
@@ -112,7 +117,7 @@ def test_form_submits(logged_in_client):
     assert dewar['courierAccount'] == '999'
     assert dewar['containerType'] == 'pucks'
     assert dewar['expectedContainers'] == '1 | 2 | 3 |  |  |  |  | '
-    assert dewar['addedTime'] == '2016-01-02T03:04:05+00:00'
+    assert dewar['addedTime'] == '2016-04-28T21:00:00+00:00'
     assert dewar['experimentStartTime'] == '2016-04-29T08:00:00+10:00'
     assert dewar['experimentEndTime'] == '2016-04-29T16:00:00+10:00'
 

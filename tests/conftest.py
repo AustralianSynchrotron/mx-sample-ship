@@ -6,6 +6,7 @@ import pytest
 import requests
 from pytz import UTC
 from datetime import datetime, timedelta
+from freezegun import freeze_time
 
 
 def login_patch(auth, username=None, password=None):
@@ -28,7 +29,11 @@ def get_scientist_patch(api):
     })
 
 
-def get_scientist_visits_patch(api):
+def get_scientist_visits_patch(api, start_time=None, end_time=None):
+    if start_time is None:
+        start_time = UTC.localize(datetime.utcnow())
+    if end_time is None:
+        end_time = start_time + timedelta(days=1)
     visits = [
         Visit({
             'epn': '123a',
@@ -37,11 +42,12 @@ def get_scientist_visits_patch(api):
         }),
         Visit({
             'epn': '456b',
-            'start_time': '2016-05-01T08:00:00+10:00',
-            'end_time': '2016-05-01T16:00:00+10:00',
+            'start_time': '2016-06-01T08:00:00+10:00',
+            'end_time': '2016-06-01T16:00:00+10:00',
         }),
     ]
-    return visits
+    return [v for v in visits
+            if v.start_time >= start_time and v.start_time <= end_time]
 
 
 def get_visit_patch(api, epn, is_epn=None):
@@ -55,13 +61,15 @@ def get_visit_patch(api, epn, is_epn=None):
         raise RequestFailed()
 
 
-@pytest.fixture(autouse=True)
+@pytest.yield_fixture(autouse=True)
 def patch_portal_api(monkeypatch):
-    monkeypatch.setattr('portalapi.Authentication.login', login_patch)
-    monkeypatch.setattr('portalapi.PortalAPI.get_scientist', get_scientist_patch)
-    monkeypatch.setattr('portalapi.PortalAPI.get_scientist_visits',
-                        get_scientist_visits_patch)
-    monkeypatch.setattr('portalapi.PortalAPI.get_visit', get_visit_patch)
+    with freeze_time('2016-04-29T07:00:00+10:00'):
+        monkeypatch.setattr('portalapi.Authentication.login', login_patch)
+        monkeypatch.setattr('portalapi.PortalAPI.get_scientist', get_scientist_patch)
+        monkeypatch.setattr('portalapi.PortalAPI.get_scientist_visits',
+                            get_scientist_visits_patch)
+        monkeypatch.setattr('portalapi.PortalAPI.get_visit', get_visit_patch)
+        yield
 
 
 @pytest.yield_fixture

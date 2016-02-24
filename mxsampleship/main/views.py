@@ -11,7 +11,7 @@ from portalapi import PortalAPI, Authentication
 from portalapi.portalapi import RequestFailed
 import requests
 from six.moves.urllib.parse import urljoin
-from datetime import datetime
+from datetime import datetime, timedelta
 from pytz import UTC
 
 
@@ -65,7 +65,11 @@ def shipment_form():
     # response when a user has no EPNs. This causes a RequestFailed exception
     # to be raised.
     try:
-        visits = current_user.api.get_scientist_visits()
+        now = UTC.localize(datetime.utcnow())
+        visits = current_user.api.get_scientist_visits(
+            start_time=(now - timedelta(7)),
+            end_time=(now + timedelta(365)),
+        )
     except RequestFailed:
         visits = []
 
