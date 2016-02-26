@@ -117,6 +117,8 @@ def test_form_submits(logged_in_client):
     assert dewar['courierAccount'] == '999'
     assert dewar['containerType'] == 'pucks'
     assert dewar['expectedContainers'] == '1 | 2 | 3 |  |  |  |  | '
+    assert dewar['piEmail'] == 'john@example.com'
+    assert dewar['beamline'] == 'MX1'
     assert dewar['addedTime'] == '2016-04-28T21:00:00+00:00'
     assert dewar['experimentStartTime'] == '2016-04-29T08:00:00+10:00'
     assert dewar['experimentEndTime'] == '2016-04-29T16:00:00+10:00'

@@ -67,8 +67,8 @@ def shipment_form():
     try:
         now = UTC.localize(datetime.utcnow())
         visits = current_user.api.get_scientist_visits(
-            start_time=(now - timedelta(7)),
-            end_time=(now + timedelta(365)),
+            start_time=(now - timedelta(2)),
+            end_time=(now + timedelta(60)),
         )
     except RequestFailed:
         visits = []
@@ -91,6 +91,9 @@ def shipment_form():
         if visit is None:
             form.other_epn.errors.append('Invalid EPN')
             return render_template('main/shipment-form.html', form=form)
+        pi = visit.principal_scientist
+        pi_email = pi.email if pi else ''
+        beamline = {23: 'MX1', 24: 'MX2'}.get(visit.equipment_id)
         container_type = form.data['container_type']
         if container_type in ('pucks', 'other-pucks'):
             containers = ' | '.join(form.data['pucks'])
@@ -110,11 +113,13 @@ def shipment_form():
             'country': form.data['country'],
             'phone': form.data['phone'],
             'email': form.data['email'],
+            'piEmail': pi_email,
             'returnDewar': form.data['return_dewar'],
             'courier': form.data['courier'],
             'courierAccount': form.data['courier_account'],
             'containerType': container_type,
             'expectedContainers': containers,
+            'beamline': beamline,
             'addedTime': UTC.localize(datetime.utcnow()).isoformat(),
             'experimentStartTime': visit.start_time.isoformat(),
             'experimentEndTime': visit.end_time.isoformat(),

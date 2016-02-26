@@ -39,6 +39,8 @@ def get_scientist_visits_patch(api, start_time=None, end_time=None):
             'epn': '123a',
             'start_time': '2016-04-29T08:00:00+10:00',
             'end_time': '2016-04-29T16:00:00+10:00',
+            'equipment_id': 23,
+            'principal_scientist': {'email': 'john@example.com'},
         }),
         Visit({
             'epn': '456b',
