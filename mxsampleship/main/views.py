@@ -158,7 +158,7 @@ def shipment(dewar_name):
     if not dewar:  # TODO: Check submitter
         abort(403)
     dewar['qrcode_data'] = arrival_data(dewar)
-    return render_template('main/shipment-slip.html', dewars=[dewar])
+    return render_template('main/shipment-slip.html', dewar=dewar)
 
 
 def get_visit(epn):

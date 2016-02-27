@@ -1,8 +1,7 @@
-{% extends 'base.html' %}
-{% import "bootstrap/wtf.html" as wtf %}
+{% extends 'bootstrap/base.html' %}
 
-{% block page_content %}
-  {% for dewar in dewars %}
+{% block content %}
+  <div class="container">
     <div class="page-header">
       <h1>MX Sample Shipment</h1>
     </div>
@@ -18,7 +17,7 @@
         </p>
         <p>
           Contact Phone: +61 3 8540 4100<br/>
-          Contact Phone: mx@synchrotron.org.au
+          Contact Email: mx@synchrotron.org.au
         </p>
       </div>
       <div>
@@ -43,5 +42,12 @@
         <img src="{{ qrcode(dewar['qrcode_data'], box_size=6) }}">
       </div>
     </div>
-  {% endfor %}
+  </div>
 {% endblock %}
+
+{% block styles %}
+  {{super()}}
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+{% endblock %}
+
+
