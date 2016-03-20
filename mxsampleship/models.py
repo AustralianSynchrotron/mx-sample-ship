@@ -1,6 +1,6 @@
 from . import login_manager
 from portalapi import PortalAPI, Authentication
-from flask import session, current_app
+from flask import current_app
 from flask.ext.login import UserMixin
 import json
 

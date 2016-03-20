@@ -1,12 +1,11 @@
 from . import auth
 from ..models import User
 from portalapi.authentication import AuthenticationFailed
-from flask import request, session, render_template, redirect, url_for, flash
+from flask import request, render_template, redirect, url_for, flash
 from flask_wtf import Form
 from flask.ext.login import login_required, login_user, logout_user
 from wtforms import StringField, PasswordField, SubmitField
 from wtforms.validators import DataRequired
-import json
 
 
 class LoginForm(Form):

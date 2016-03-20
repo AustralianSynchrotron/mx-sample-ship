@@ -2,6 +2,7 @@ beautifulsoup4==4.4.1
 colorama==0.3.6
 cookies==2.2.1
 dominate==2.1.16
+flake8==2.5.4
 Flask==0.10.1
 Flask-Bootstrap==3.3.5.7
 Flask-Login==0.3.2
@@ -12,9 +13,12 @@ freezegun==0.3.6
 itsdangerous==0.24
 Jinja2==2.8
 MarkupSafe==0.23
+mccabe==0.4.0
+pep8==1.7.0
 Pillow==3.1.0
 portalapi==0.2.3
 py==1.4.31
+pyflakes==1.0.0
 pytest==2.8.7
 pytest-splinter==1.7.1
 python-dateutil==2.4.2

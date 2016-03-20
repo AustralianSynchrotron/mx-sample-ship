@@ -4,8 +4,7 @@ from flask import (current_app, request, render_template, url_for, redirect,
                    abort, flash)
 from flask.ext.login import login_required, current_user
 from flask_wtf import Form
-from wtforms import (StringField, PasswordField, SubmitField, BooleanField,
-                     SelectField, FieldList)
+from wtforms import StringField, SubmitField, BooleanField, SelectField, FieldList
 from wtforms.validators import Required, Email, ValidationError
 from portalapi import PortalAPI, Authentication
 from portalapi.portalapi import RequestFailed

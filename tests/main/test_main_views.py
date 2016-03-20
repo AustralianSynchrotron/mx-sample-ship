@@ -4,7 +4,6 @@ from flask import url_for, current_app
 import pytest
 import responses
 from bs4 import BeautifulSoup
-from six import string_types
 from six.moves.urllib.parse import urlsplit
 import json
 
@@ -136,7 +135,7 @@ def test_form_submits_for_other_epn(logged_in_client):
         'other_epn': 'valid-epn',
         'container_type': 'pucks',
     }
-    response = logged_in_client.post(url_for('main.shipment_form'), data=data)
+    logged_in_client.post(url_for('main.shipment_form'), data=data)
     dewar = json.loads(responses.calls[0].request.body)
     assert dewar['epn'] == 'valid-epn'
     assert dewar['experimentStartTime'] == '2016-01-02T08:00:00+10:00'
@@ -170,7 +169,7 @@ def test_form_submits_other_pucks(logged_in_client):
         'pucks-1': 'o2',
         'pucks-2': 'o3',
     }
-    response = logged_in_client.post(url_for('main.shipment_form'), data=data)
+    logged_in_client.post(url_for('main.shipment_form'), data=data)
     dewar = json.loads(responses.calls[0].request.body)
     assert dewar['expectedContainers'] == 'o1 | o2 | o3 |  |  |  |  | '
 
@@ -188,7 +187,7 @@ def test_form_submits_cassettes(logged_in_client):
         'cassettes-0': 'c1',
         'cassettes-1': 'c2',
     }
-    response = logged_in_client.post(url_for('main.shipment_form'), data=data)
+    logged_in_client.post(url_for('main.shipment_form'), data=data)
     dewar = json.loads(responses.calls[0].request.body)
     assert dewar['expectedContainers'] == 'c1 | c2'
 
@@ -205,7 +204,7 @@ def test_form_submits_canes(logged_in_client):
         'container_type': 'canes',
         'canes': 'the-canes',
     }
-    response = logged_in_client.post(url_for('main.shipment_form'), data=data)
+    logged_in_client.post(url_for('main.shipment_form'), data=data)
     dewar = json.loads(responses.calls[0].request.body)
     assert dewar['expectedContainers'] == 'the-canes'
 
@@ -238,7 +237,7 @@ def test_shipment_view(logged_in_client):
     html = response.data.decode('utf-8')
     assert 'The Dewar ID is: d-123a-1' in html
     assert '123 Main Road' in html
-    assert  '1 | 2 | 3 | 4 | 5 |  |  | ' in html
+    assert '1 | 2 | 3 | 4 | 5 |  |  | ' in html
 
 
 def test_directed_to_login_if_token_invalid(logged_in_client, monkeypatch):
@@ -282,7 +281,6 @@ def test_container_type_is_required(logged_in_client):
     page = BeautifulSoup(response.data, 'html.parser')
     container_type_text = page.find(id='container_type-field').text
     assert 'Container type is required.' in container_type_text
-
 
 
 def test_submitted_data_should_not_be_overwitten(logged_in_client):

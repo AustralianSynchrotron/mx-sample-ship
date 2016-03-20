@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-from flask.ext.script import Manager, Shell
+from flask.ext.script import Manager
 from mxsampleship import create_app
 import os
 

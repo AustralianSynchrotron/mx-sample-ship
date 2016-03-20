@@ -5,11 +5,10 @@ from selenium.webdriver.support.select import Select
 from vcr import VCR
 from threading import Thread
 import os
-import requests
 
 
 pytestmark = pytest.mark.skipif('DISPLAY' not in os.environ,
-				reason='Display required')
+                                reason='Display required')
 
 
 vcr = VCR(cassette_library_dir='tests/fixtures/cassettes')
@@ -82,9 +81,9 @@ def test_user_can_log_out(logged_in_browser):
 @vcr.use_cassette()
 def test_user_can_submit_form_with_other_epn(logged_in_browser):
     browser = logged_in_browser
-    assert browser.find_by_name('other_epn').visible == False
+    assert browser.find_by_name('other_epn').visible is False
     browser.select('epn', 'other')
-    assert browser.find_by_name('other_epn').visible == True
+    assert browser.find_by_name('other_epn').visible is True
     browser.fill('other_epn', 'valid-epn')
     browser.select('container_type', 'pucks')
     browser.find_by_name('submit').first.click()
@@ -94,25 +93,25 @@ def test_user_can_submit_form_with_other_epn(logged_in_browser):
 def test_shows_correct_fields_for_each_container_type(logged_in_browser):
     browser = logged_in_browser
     browser.select('container_type', 'select')
-    assert browser.find_by_id('pucks').visible == False
-    assert browser.find_by_id('cassettes').visible == False
-    assert browser.find_by_id('canes').visible == False
+    assert browser.find_by_id('pucks').visible is False
+    assert browser.find_by_id('cassettes').visible is False
+    assert browser.find_by_id('canes').visible is False
     browser.select('container_type', 'pucks')
-    assert browser.find_by_id('pucks').visible == True
-    assert browser.find_by_id('cassettes').visible == False
-    assert browser.find_by_id('canes').visible == False
+    assert browser.find_by_id('pucks').visible is True
+    assert browser.find_by_id('cassettes').visible is False
+    assert browser.find_by_id('canes').visible is False
     browser.select('container_type', 'other-pucks')
-    assert browser.find_by_id('pucks').visible == True
-    assert browser.find_by_id('cassettes').visible == False
-    assert browser.find_by_id('canes').visible == False
+    assert browser.find_by_id('pucks').visible is True
+    assert browser.find_by_id('cassettes').visible is False
+    assert browser.find_by_id('canes').visible is False
     browser.select('container_type', 'cassettes')
-    assert browser.find_by_id('pucks').visible == False
-    assert browser.find_by_id('cassettes').visible == True
-    assert browser.find_by_id('canes').visible == False
+    assert browser.find_by_id('pucks').visible is False
+    assert browser.find_by_id('cassettes').visible is True
+    assert browser.find_by_id('canes').visible is False
     browser.select('container_type', 'canes')
-    assert browser.find_by_id('pucks').visible == False
-    assert browser.find_by_id('cassettes').visible == False
-    assert browser.find_by_id('canes').visible == True
+    assert browser.find_by_id('pucks').visible is False
+    assert browser.find_by_id('cassettes').visible is False
+    assert browser.find_by_id('canes').visible is True
 
 
 @vcr.use_cassette()
@@ -123,7 +122,7 @@ def test_user_can_submit_form_with_cassettes(logged_in_browser):
     browser.fill('cassettes-0', 'CAS001')
     browser.fill('cassettes-1', 'CAS002')
     browser.find_by_name('submit').first.click()
-    assert  'CAS001,CAS002' in browser.find_by_id('containers').text
+    assert 'CAS001,CAS002' in browser.find_by_id('containers').text
 
 
 @vcr.use_cassette()

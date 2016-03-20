@@ -10,8 +10,8 @@ from freezegun import freeze_time
 
 
 def login_patch(auth, username=None, password=None):
-    if ((username is None and password is None)
-        or (username == 'jane' and password == 'secret')):
+    if ((username is None and password is None) or
+        (username == 'jane' and password == 'secret')):
         auth._token = '1a2b3c'
         auth._lifespan = 3600
         auth._expires = UTC.localize(datetime.now() + timedelta(hours=1))
