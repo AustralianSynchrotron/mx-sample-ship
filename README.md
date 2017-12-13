@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/AustralianSynchrotron/mx-sample-ship.svg?branch=master)](https://travis-ci.org/AustralianSynchrotron/mx-sample-ship)
+
 Website for submitting MX sample shipping information.
 
 ## Running
@@ -12,5 +14,5 @@ export SAMPLE_SHIP_CONFIG='development' # or 'production'
 
 ```bash
 pip install -e .
-py.test
+SECRET_KEY=whatever py.test
 ```
