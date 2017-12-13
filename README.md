@@ -1,6 +1,10 @@
-[![Build Status](https://travis-ci.org/AustralianSynchrotron/mx-sample-ship.svg?branch=master)](https://travis-ci.org/AustralianSynchrotron/mx-sample-ship)
-
 Website for submitting MX sample shipping information.
+
+## Installation
+
+```
+pip install --extra-index https://aspypi.synchrotron.org.au .
+```
 
 ## Running
 
@@ -13,6 +17,7 @@ export SAMPLE_SHIP_CONFIG='development' # or 'production'
 ## Testing
 
 ```bash
-pip install -e .
+pip install -r requirements.txt --extra-index https://aspypi.synchrotron.org.au
+pip install --extra-index https://aspypi.synchrotron.org.au -e .
 SECRET_KEY=whatever py.test
 ```
