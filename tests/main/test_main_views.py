@@ -6,6 +6,7 @@ import responses
 from bs4 import BeautifulSoup
 from six.moves.urllib.parse import urlsplit
 import json
+from portalapi.models import Scientist
 
 
 LOGIN_DATA = {'username': 'jane', 'password': 'secret'}
@@ -46,9 +47,28 @@ def test_shipment_form_renders_after_login(logged_in_client):
     page = BeautifulSoup(response.data, 'html.parser')
     assert 'MX Sample Shipment' in page.title
     assert 'Full Name' in page.text
+    assert page.find(id='owner').attrs['value'] == 'Jane Doe'
     epn_option = page.find(id='epn').option
     assert epn_option.text == '123a @ 2016-04-29 08:00'
     assert epn_option['value'] == '123a'
+
+
+def test_shipment_form_renders_after_login_for_non_ascii_names(monkeypatch, client):
+
+    def get_scientist_patch(api):
+        return Scientist({
+            'first_names': 'Lucía',
+            'last_name': 'Doe',
+            'organisation': {'name_long': 'Some University'},
+            'telephone_number_1': '111-222-333',
+            'email': 'jane@example.com',
+        })
+
+    monkeypatch.setattr('portalapi.PortalAPI.get_scientist', get_scientist_patch)
+    client.post(url_for('auth.login'), data=LOGIN_DATA)
+    response = client.get(url_for('main.shipment_form'))
+    page = BeautifulSoup(response.data, 'html.parser')
+    assert page.find(id='owner').attrs['value'] == 'Lucía Doe'
 
 
 def test_shipment_form_shows_epns_outside_of_a_one_day_window(logged_in_client):
