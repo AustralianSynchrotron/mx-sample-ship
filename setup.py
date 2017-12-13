@@ -1,5 +1,11 @@
 from setuptools import setup
 import re
+import sys
+
+
+if sys.version_info < (3, 5):
+    raise SystemExit('mxsampleship requires Python >= 3.5')
+
 
 with open('mxsampleship/__init__.py') as file:
     version = re.search(r"__version__ = '(.*)'", file.read()).group(1)

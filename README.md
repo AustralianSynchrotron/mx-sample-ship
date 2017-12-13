@@ -3,6 +3,7 @@ Website for submitting MX sample shipping information.
 ## Installation
 
 ```
+sudo yum install libjpeg-turbo-devel zlib-devel
 pip install --extra-index https://aspypi.synchrotron.org.au .
 ```
 

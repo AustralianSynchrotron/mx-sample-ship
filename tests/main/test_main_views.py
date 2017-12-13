@@ -44,7 +44,7 @@ def test_shipment_form_redirects_to_login(client):
 def test_shipment_form_renders_after_login(logged_in_client):
     response = logged_in_client.get(url_for('main.shipment_form'))
     assert response.status_code == 200
-    page = BeautifulSoup(response.data, 'html.parser')
+    page = BeautifulSoup(response.data.decode(), 'html.parser')
     assert 'MX Sample Shipment' in page.title
     assert 'Full Name' in page.text
     assert page.find(id='owner').attrs['value'] == 'Jane Doe'
@@ -67,13 +67,13 @@ def test_shipment_form_renders_after_login_for_non_ascii_names(monkeypatch, clie
     monkeypatch.setattr('portalapi.PortalAPI.get_scientist', get_scientist_patch)
     client.post(url_for('auth.login'), data=LOGIN_DATA)
     response = client.get(url_for('main.shipment_form'))
-    page = BeautifulSoup(response.data, 'html.parser')
+    page = BeautifulSoup(response.data.decode(), 'html.parser')
     assert page.find(id='owner').attrs['value'] == 'Lucía Doe'
 
 
 def test_shipment_form_shows_epns_outside_of_a_one_day_window(logged_in_client):
     response = logged_in_client.get(url_for('main.shipment_form'))
-    page = BeautifulSoup(response.data, 'html.parser')
+    page = BeautifulSoup(response.data.decode(), 'html.parser')
     epns = [option.text for option in page.find_all('option')]
     assert '456b @ 2016-06-01 08:00' in epns
 
@@ -87,7 +87,7 @@ def test_shipment_form_renders_when_get_visits_endpoint_is_empty(logged_in_clien
 
     response = logged_in_client.get(url_for('main.shipment_form'))
     assert response.status_code == 200
-    page = BeautifulSoup(response.data, 'html.parser')
+    page = BeautifulSoup(response.data.decode(), 'html.parser')
     assert 'MX Sample Shipment' in page.h1
 
 
@@ -171,7 +171,7 @@ def test_form_does_not_submit_if_epn_is_invalid(logged_in_client):
         'container_type': 'pucks',
     }
     response = logged_in_client.post(url_for('main.shipment_form'), data=data)
-    page = BeautifulSoup(response.data, 'html.parser')
+    page = BeautifulSoup(response.data.decode(), 'html.parser')
     assert 'Invalid EPN' in page.find(id='other_epn-field').text
 
 
@@ -254,7 +254,7 @@ def test_shipment_view(logged_in_client):
                   '%s/dewars/d-1a-1' % current_app.config['PUCKTRACKER_URL'],
                   json={'error': None, 'data': dewar})
     response = logged_in_client.get(url_for('main.shipment', dewar_name='d-1a-1'))
-    html = response.data.decode('utf-8')
+    html = response.data.decode()
     assert 'The Dewar ID is: d-123a-1' in html
     assert '123 Main Road' in html
     assert '1 | 2 | 3 | 4 | 5 |  |  | ' in html
@@ -270,19 +270,19 @@ def test_directed_to_login_if_token_invalid(logged_in_client, monkeypatch):
 
 def test_should_display_a_logout_link_when_logged_in(logged_in_client):
     response = logged_in_client.get(url_for('main.shipment_form'))
-    assert 'Log out' in response.data.decode('utf-8')
+    assert 'Log out' in response.data.decode()
 
 
 def test_should_not_display_logout_if_not_logged_in(client):
     response = client.get(url_for('auth.login'))
-    assert 'Log out' not in response.data.decode('utf-8')
+    assert 'Log out' not in response.data.decode()
 
 
 def test_displays_errors_if_form_entered_incorrectly(logged_in_client):
     data_missing_owner = {'owner': ''}
     response = logged_in_client.post(url_for('main.shipment_form'),
                                      data=data_missing_owner)
-    page = BeautifulSoup(response.data, 'html.parser')
+    page = BeautifulSoup(response.data.decode(), 'html.parser')
     assert 'This field is required.' in page.find(id='owner-field').text
 
 
@@ -290,7 +290,7 @@ def test_valid_email_is_required(logged_in_client):
     data_with_invalid_email = {'email': 'invalid-email'}
     response = logged_in_client.post(url_for('main.shipment_form'),
                                      data=data_with_invalid_email)
-    page = BeautifulSoup(response.data, 'html.parser')
+    page = BeautifulSoup(response.data.decode(), 'html.parser')
     assert 'Invalid email address' in page.find(id='email-field').text
 
 
@@ -298,7 +298,7 @@ def test_container_type_is_required(logged_in_client):
     data_missing_container_type = {'container_type': 'select'}
     response = logged_in_client.post(url_for('main.shipment_form'),
                                      data=data_missing_container_type)
-    page = BeautifulSoup(response.data, 'html.parser')
+    page = BeautifulSoup(response.data.decode(), 'html.parser')
     container_type_text = page.find(id='container_type-field').text
     assert 'Container type is required.' in container_type_text
 
@@ -307,7 +307,7 @@ def test_submitted_data_should_not_be_overwitten(logged_in_client):
     data_with_invalid_email = {'owner': 'John', 'email': 'invalid-email'}
     response = logged_in_client.post(url_for('main.shipment_form'),
                                      data=data_with_invalid_email)
-    page = BeautifulSoup(response.data, 'html.parser')
+    page = BeautifulSoup(response.data.decode(), 'html.parser')
     assert page.find(attrs={'name': 'owner'})['value'] == 'John'
     assert page.find(attrs={'name': 'email'})['value'] == 'invalid-email'
 
@@ -324,4 +324,4 @@ def test_dewar_tracker_errors_should_be_flashed(logged_in_client):
         'container_type': 'pucks',
     }
     response = logged_in_client.post(url_for('main.shipment_form'), data=data)
-    assert 'Pucktracker error' in response.data.decode('utf-8')
+    assert 'Pucktracker error' in response.data.decode()
