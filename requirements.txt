@@ -1,3 +1,4 @@
+--extra-index-url https://aspypi.synchrotron.org.au/simple
 beautifulsoup4==4.4.1
 colorama==0.3.6
 cookies==2.2.1
